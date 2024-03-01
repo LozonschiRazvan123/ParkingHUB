@@ -18,7 +18,6 @@ namespace ParkingHUB.Data
                     {
                         new Parking
                         {
-                            Id = 1,
                             Price = 10.50,
                             TotalSlot = 101,
                             AvailableSlot = 97,
@@ -29,7 +28,6 @@ namespace ParkingHUB.Data
 
                         new Parking
                         {
-                            Id = 2,
                             Price = 7.00,
                             TotalSlot = 20,
                             AvailableSlot = 15,
@@ -40,7 +38,6 @@ namespace ParkingHUB.Data
 
                         new Parking
                         {
-                            Id = 3,
                             Price = 15.75,
                             TotalSlot = 12,
                             AvailableSlot = 11,
@@ -51,7 +48,6 @@ namespace ParkingHUB.Data
 
                         new Parking
                         {
-                            Id=4,
                             Price = 3.50,
                             TotalSlot = 111,
                             AvailableSlot = 108,
@@ -62,7 +58,6 @@ namespace ParkingHUB.Data
 
                         new Parking
                         {
-                            Id = 5,
                             Price = 80.00,
                             TotalSlot = 78,
                             AvailableSlot = 76,
