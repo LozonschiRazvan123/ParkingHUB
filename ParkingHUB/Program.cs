@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ParkingHUB.Data;
+using ParkingHUB.Interface;
+using ParkingHUB.Models;
+using ParkingHUB.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,12 +13,16 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddScoped<IParking, ParkingRepository>();
 builder.Services.AddTransient<Seed>();
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
 var app = builder.Build();
 
 if (args.Length == 1 && args[0].ToLower() == "seeddata")
 {
-    //await Seed.SeedUsersAndRolesAsync(app);
+    await Seed.SeedUsersAndRolesAsync(app);
     Seed.SeedData(app);
 }
 

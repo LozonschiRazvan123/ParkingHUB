@@ -11,6 +11,6 @@ namespace ParkingHUB.Models
         public ICollection<ParkingVehicle> ParkingVehicles { get; set; }
         [ForeignKey("User")]
         public string? UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
     }
 }
