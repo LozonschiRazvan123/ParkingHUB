@@ -26,8 +26,6 @@ namespace ParkingHUB.Data
                             TotalSlot = 101,
                             AvailableSlot = 97,
                             Location = "Mall X, Strada Principala nr. 123",
-                            CheckIn = DateTime.Parse("2024-03-01 08:00"),
-                            CheckOut = DateTime.Parse("2024-03-01 10:00"),
                         },
 
                         new Parking
@@ -36,8 +34,6 @@ namespace ParkingHUB.Data
                             TotalSlot = 20,
                             AvailableSlot = 15,
                             Location = "Piata Centrala, Strada Libertatii nr. 45",
-                            CheckIn = DateTime.Parse("2024-02-29 09:30"),
-                            CheckOut = DateTime.Parse("2024-02-29 11:30")
                         },
 
                         new Parking
@@ -46,8 +42,6 @@ namespace ParkingHUB.Data
                             TotalSlot = 12,
                             AvailableSlot = 11,
                             Location = "Aeroportul International, Terminalul 2",
-                            CheckIn = DateTime.Parse("2024-02-28 17:00"),
-                            CheckOut = DateTime.Parse("2024-03-02 18:00")
                         },
 
                         new Parking
@@ -56,8 +50,6 @@ namespace ParkingHUB.Data
                             TotalSlot = 111,
                             AvailableSlot = 108,
                             Location = "Cladirea Office Park, Bulevardul Victoriei nr. 67",
-                            CheckIn = DateTime.Parse("2024-03-01 10:15"),
-                            CheckOut = DateTime.Parse("2024-03-01 12:15")
                         },
 
                         new Parking
@@ -66,8 +58,6 @@ namespace ParkingHUB.Data
                             TotalSlot = 78,
                             AvailableSlot = 76,
                             Location = "Strada Linistii nr. 10",
-                            CheckIn = DateTime.Parse("2024-02-01 08:00"),
-                            CheckOut = DateTime.Parse("2024-02-1 11:00")
                         },
 
                         new Parking
@@ -76,8 +66,6 @@ namespace ParkingHUB.Data
                             TotalSlot = 88,
                             AvailableSlot = 86,
                             Location = "Strada Petru Rares nr. 110",
-                            CheckIn = DateTime.Parse("2024-02-01 08:10"),
-                            CheckOut = DateTime.Parse("2024-02-1 12:10")
                         }
 
                         });
@@ -91,64 +79,252 @@ namespace ParkingHUB.Data
                         new Vehicle
                         {
                             PlateLicence = "IS 21 MAY",
+                            CheckIn = DateTime.Parse("2024-03-01 08:00"),
+                            CheckOut = DateTime.Parse("2024-03-01 10:00"),
                         },
 
                         new Vehicle
                         {
-                            PlateLicence = "IS 20 OCT"
+                            PlateLicence = "IS 20 OCT",
+                            CheckIn = DateTime.Parse("2024-03-01 09:30"),
+                            CheckOut = DateTime.Parse("2024-03-01 11:30")
                         },
 
                         new Vehicle
                         {
-                            PlateLicence = "NT 19 RAZ"
+                            PlateLicence = "NT 19 RAZ",
+                            CheckIn = DateTime.Parse("2024-03-02 17:00"),
+                            CheckOut = DateTime.Parse("2024-03-02 18:00")
                         },
 
                         new Vehicle
                         {
-                            PlateLicence = "BC 01 IIS"
+                            PlateLicence = "BC 01 IIS",
+                            CheckIn = DateTime.Parse("2024-03-01 10:15"),
+                            CheckOut = DateTime.Parse("2024-03-01 12:15")
                         },
 
                         new Vehicle
                         {
-                            PlateLicence = "NT 99 TAR"
+                            PlateLicence = "NT 99 TAR",
+                            CheckIn = DateTime.Parse("2024-03-01 10:15"),
+                            CheckOut = DateTime.Parse("2024-03-01 12:15")
                         },
 
                         new Vehicle
                         {
-                            PlateLicence = "VS 12 PUI"
+                            PlateLicence = "VS 12 PUI",
+                            CheckIn = DateTime.Parse("2024-03-01 08:00"),
+                            CheckOut = DateTime.Parse("2024-03-1 11:00")
                         },
 
                         new Vehicle
                         {
-                            PlateLicence = "GL 44 FDL"
+                            PlateLicence = "GL 44 FDL",
+                            CheckIn = DateTime.Parse("2024-03-01 08:00"),
+                            CheckOut = DateTime.Parse("2024-03-1 11:00")
+                        },
+
+                        new Vehicle
+                        {
+                            PlateLicence = "BT 32 XYZ",
+                            CheckIn = DateTime.Parse("2024-03-01 08:10"),
+                            CheckOut = DateTime.Parse("2024-03-1 12:10")
+                        },
+
+                        new Vehicle
+                        {
+                            PlateLicence = "VS 22 IKJ",
+                            CheckIn = DateTime.Parse("2024-03-02 17:10"),
+                            CheckOut = DateTime.Parse("2024-03-02 20:10")
+                        },
+
+                        new Vehicle
+                        {
+                            PlateLicence = "GL 32 QWL",
+                            CheckIn = DateTime.Parse("2024-03-01 08:10"),
+                            CheckOut = DateTime.Parse("2024-03-01 12:10")
+                        },
+
+                        new Vehicle
+                        {
+                            PlateLicence = "NT 78 DDD",
+                            CheckIn = DateTime.Parse("2024-03-02 10:10"),
+                            CheckOut = DateTime.Parse("2024-03-02 12:10")
+                        },
+
+                        new Vehicle
+                        {
+                            PlateLicence = "BC 22 PQR",
+                            CheckIn = DateTime.Parse("2024-03-02 9:23"),
+                            CheckOut = DateTime.Parse("2024-03-02 12:23")
+                        },
+
+                        new Vehicle
+                        {
+                            PlateLicence = "NT 67 LIV",
+                            CheckIn = DateTime.Parse("2024-03-02 10:30"),
+                            CheckOut = DateTime.Parse("2024-03-02 12:30")
+                        },
+
+                        new Vehicle
+                        {
+                            PlateLicence = "VS 17 FCD",
+                            CheckIn = DateTime.Parse("2024-03-02 17:00"),
+                            CheckOut = DateTime.Parse("2024-03-02 20:00")
+                        },
+
+                        new Vehicle
+                        {
+                            PlateLicence = "NT 98 PQR",
+                            CheckIn = DateTime.Parse("2024-03-02 11:00"),
+                            CheckOut = DateTime.Parse("2024-03-02 12:00")
+                        },
+
+                        new Vehicle
+                        {
+                            PlateLicence = "IS 27 FCS",
+                            CheckIn = DateTime.Parse("2024-03-01 9:23"),
+                            CheckOut = DateTime.Parse("2024-03-01 12:23")
+                        },
+
+                        new Vehicle
+                        {
+                            PlateLicence = "IS 29 CFR",
+                            CheckIn = DateTime.Parse("2024-03-01 19:00"),
+                            CheckOut = DateTime.Parse("2024-03-01 21:00")
+                        },
+
+                        new Vehicle
+                        {
+                            PlateLicence = "IS 31 PNI",
+                            CheckIn = DateTime.Parse("2024-03-01 10:00"),
+                            CheckOut = DateTime.Parse("2024-03-01 21:00")
+                        }
+
+                    });
+                    context.SaveChanges();
+                }
+
+                if (!context.ParkingVehicles.Any())
+                {
+                    context.ParkingVehicles.AddRange(new List<ParkingVehicle>()
+                    {
+                        new ParkingVehicle
+                        {
+                            ParkingId = 1,
+                            VehicleId = 1,
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 1,
+                            VehicleId = 2,  
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 1,
+                            VehicleId = 3,
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 1,
+                            VehicleId = 4,
                         },
                         
-                        new Vehicle
+
+                        new ParkingVehicle
                         {
-                            PlateLicence = "BT 32 XYZ"
+                            ParkingId = 2,
+                            VehicleId = 5,
                         },
 
-                        new Vehicle
+                        new ParkingVehicle
                         {
-                            PlateLicence = "VS 22 IKJ"
+                            ParkingId = 2,
+                            VehicleId = 6,
                         },
 
-                        new Vehicle
+                        new ParkingVehicle
                         {
-                            PlateLicence = "GL 32 QWL"
+                            ParkingId = 2,
+                            VehicleId = 7,
                         },
 
-                        new Vehicle
+                        new ParkingVehicle 
+                        { 
+                            ParkingId = 2,
+                            VehicleId = 8,
+                        },
+
+                        new ParkingVehicle
                         {
-                            PlateLicence = "NT 78 DDD"
+                            ParkingId = 2,
+                            VehicleId = 9,
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 3,
+                            VehicleId = 10,
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 4,
+                            VehicleId = 11,
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 4,
+                            VehicleId = 12,
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 4,
+                            VehicleId = 13,
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 4,
+                            VehicleId = 14,
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 5,
+                            VehicleId = 15,
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 5,
+                            VehicleId = 16
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 6,
+                            VehicleId = 17
+                        },
+
+                        new ParkingVehicle
+                        {
+                            ParkingId = 6,
+                            VehicleId = 18,
                         }
                     });
                     context.SaveChanges();
                 }
             }
-
         }
 
+           
         public static async Task SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
         {
 

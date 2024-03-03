@@ -2,6 +2,7 @@
 using ParkingHUB.Data;
 using ParkingHUB.DTO;
 using ParkingHUB.Interface;
+using ParkingHUB.ViewModel;
 
 namespace ParkingHUB.Repository
 {
@@ -20,11 +21,25 @@ namespace ParkingHUB.Repository
                 AvailableSlot = p.AvailableSlot,
                 TotalSlot = p.TotalSlot,
                 Location = p.Location,
-                Price= p.Price,
-                CheckIn = p.CheckIn,
-                CheckOut= p.CheckOut,
-
+                Price= p.Price
             });
+        }
+
+        public async Task<IEnumerable<ParkingListViewModel>> GetParkingVehicle()
+        {
+            return  _context.ParkingVehicles
+                        .Include(vp => vp.Vehicle)
+                        .Include(vp => vp.Parking)
+                        .Select(vp => new ParkingListViewModel
+                        {
+                            ParkingId = vp.Parking.Id,
+                            Location = vp.Parking.Location,
+                            PlateLicense = vp.Vehicle.PlateLicence,
+                            CheckIn = vp.Vehicle.CheckIn,
+                            CheckOut = vp.Vehicle.CheckOut
+    
+                        });
+
         }
     }
 }

@@ -4,6 +4,7 @@ using ParkingHUB.Data;
 using ParkingHUB.Interface;
 using ParkingHUB.Models;
 using ParkingHUB.Repository;
+using ParkingHUB.ViewModel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddScoped<IParking, ParkingRepository>();
+builder.Services.AddScoped<IPagination<ParkingListViewModel>, PaginationRepository<ParkingListViewModel>>();
 builder.Services.AddTransient<Seed>();
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>()

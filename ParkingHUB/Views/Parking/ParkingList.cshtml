@@ -1,0 +1,59 @@
+﻿@using ParkingHUB.ViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1 class="centered-title">Vehicle Parking List</h1>
+@model ParkingHUB.Pagination.PageResult<ParkingHUB.ViewModel.ParkingListViewModel>
+<style>
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .centered-title {
+        text-align: center;
+        margin-bottom: 1em;
+    }
+</style>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Number parking</th>
+            <th>Location</th>
+            <th>Plate license</th>
+            <th>Check in</th>
+            <th>Check out</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Results.Count; i++)
+        {
+            var item = Model.Results[i];
+            <tr>
+                <td>@(i + 1)</td>
+                <td>@item.Location</td>
+                <td>@item.PlateLicense</td>
+                <td>@item.CheckIn</td>
+                <td>@item.CheckOut</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<nav aria-label="Page navigation" class="pagination-container">
+    <ul class="pagination">
+        @if (Model.PreviousPage.HasValue)
+        {
+            <li class="page-item"><a class="page-link" href="?pageNumber=@Model.PreviousPage">Previous</a></li>
+        }
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(Model.CurrentPage == i ? "active" : "")"><a class="page-link" href="?pageNumber=@i">@i</a></li>
+        }
+        @if (Model.NextPage.HasValue)
+        {
+            <li class="page-item"><a class="page-link" href="?pageNumber=@Model.NextPage">Next</a></li>
+        }
+    </ul>
+</nav>
