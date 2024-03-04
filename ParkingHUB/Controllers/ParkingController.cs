@@ -2,6 +2,7 @@
 using ParkingHUB.DTO;
 using ParkingHUB.Interface;
 using ParkingHUB.Pagination;
+using ParkingHUB.Repository;
 using ParkingHUB.ViewModel;
 
 namespace ParkingHUB.Controllers
@@ -34,5 +35,18 @@ namespace ParkingHUB.Controllers
 
             return View(pageResult);
         }
+        public async Task<IActionResult> ParkingListVehicle(string location, int pageNumber = 1, int pageSize = 10)
+        {
+            var filter = new PaginationPage
+            {
+                pageNumber = pageNumber,
+                pageSize = pageSize
+            };
+
+            var pageResult = await _parking.GetParkingVehicleInLocation(location, filter);
+            ViewBag.Location = location;
+            return View(pageResult);
+        }
+
     }
 }

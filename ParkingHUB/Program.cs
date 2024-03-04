@@ -16,6 +16,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 builder.Services.AddScoped<IParking, ParkingRepository>();
 builder.Services.AddScoped<IPagination<ParkingListViewModel>, PaginationRepository<ParkingListViewModel>>();
+builder.Services.AddScoped(typeof(PaginationRepository<>));
 builder.Services.AddTransient<Seed>();
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>()
