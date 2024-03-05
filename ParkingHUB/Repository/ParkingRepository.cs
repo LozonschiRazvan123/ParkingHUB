@@ -2,6 +2,7 @@
 using ParkingHUB.Data;
 using ParkingHUB.DTO;
 using ParkingHUB.Interface;
+using ParkingHUB.Models;
 using ParkingHUB.Pagination;
 using ParkingHUB.ViewModel;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -17,6 +18,39 @@ namespace ParkingHUB.Repository
             _context = context;
             _pagination = pagination;
         }
+
+        public bool Save()
+        {
+            var changes = _context.SaveChanges();
+            return changes > 0 ? true : false;
+        }
+
+        public bool CreateParking(ParkingListViewModel parking)
+        {
+            var parkingEntity = new Parking
+            {
+                Location = parking.Location,
+                Price = 0.0,
+            };
+
+            var vehicleEntity = new Vehicle
+            {
+                Id = parking.ParkingId,
+                PlateLicence = parking.PlateLicense,
+                CheckIn = parking.CheckIn,
+                CheckOut = parking.CheckOut,
+            };
+
+            var parkingVehicleEntity = new ParkingVehicle
+            {
+                Parking = parkingEntity,
+                Vehicle = vehicleEntity
+            };
+
+            _context.ParkingVehicles.Add(parkingVehicleEntity);
+            return Save();
+        }
+
         public async Task<IEnumerable<ParkingDTO>> GetParkings()
         {
             return  _context.Parkings.Select(p => new ParkingDTO
@@ -45,6 +79,7 @@ namespace ParkingHUB.Repository
                         }).ToListAsync();
 
         }
+
 
         public async Task<PageResult<ParkingListViewModel>> GetParkingVehicleInLocation(string location, PaginationPage filter)
         {
@@ -84,6 +119,24 @@ namespace ParkingHUB.Repository
                 PreviousPage = previousPage,
                 NextPage = nextPage
             };
+        }
+
+        public async Task<IEnumerable<ParkingListViewModel>> GetParkingId(int id)
+        {
+            var result = await _context.ParkingVehicles
+                       .Include(vp => vp.Vehicle)
+                       .Include(vp => vp.Parking)
+                       .Where(vp => vp.ParkingId == id)
+                       .Select(vp => new ParkingListViewModel
+                       {
+                           ParkingId = vp.Parking.Id,
+                           Location = vp.Parking.Location,
+                           PlateLicense = vp.Vehicle.PlateLicence,
+                           CheckIn = vp.Vehicle.CheckIn,
+                           CheckOut = vp.Vehicle.CheckOut
+
+                       }).ToListAsync();
+            return result;
         }
     }
 }
