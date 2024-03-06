@@ -25,7 +25,8 @@ namespace ParkingHUB.Repository
                     Location = vp.Parking.Location,
                     PlateLicense = vp.Vehicle.PlateLicence,
                     CheckIn = vp.Vehicle.CheckIn,
-                    CheckOut = vp.Vehicle.CheckOut
+                    CheckOut = vp.Vehicle.CheckOut,
+                    ParkingFee = vp.Vehicle.ParkingFee
                 });
 
             var count = await query.CountAsync();

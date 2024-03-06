@@ -6,5 +6,6 @@
         public DateTime CheckIn { get; set; }
         public DateTime CheckOut { get; set; }
         public string PlateLicence { get; set; }
+        public string ParkingFee {  get; set; }
     }
 }

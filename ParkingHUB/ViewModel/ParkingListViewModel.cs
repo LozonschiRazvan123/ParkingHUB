@@ -7,6 +7,8 @@
         public string PlateLicense {  get; set; }
         public DateTime CheckIn {  get; set; } 
         public DateTime CheckOut {  get; set; }
-        public int AvailableSlot { get; set; }
+        public int? AvailableSlot { get; set; }
+        public double? Price { get; set; }
+        public double ParkingFee { get; set; }
     }
 }

@@ -11,42 +11,45 @@
         margin-bottom: 1em;
     }
 </style>
-@if (Model.Availabel > 0)
-{
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addParkingModal">Add Parking</button>
 
-    <div class="modal fade" id="addParkingModal" tabindex="-1" aria-labelledby="addParkingModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addParkingModalLabel">Add Parking</h5>
-                </div>
-                <div class="modal-body">
-                    <form id="addParkingForm" method="post" asp-controller="Parking" asp-action="AddParking">
-                        <div class="mb-3">
-                            <label for="location" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="location" name="Location" asp-for="@Model.Location">
-                        </div>
-                        <div class="mb-3">
-                            <label for="plateNumber" class="form-label">Plate Number</label>
-                            <input type="text" class="form-control" id="plateNumber" name="PlateLicense" asp-for="@Model.PlateLicense">
-                        </div>
-                        <div class="mb-3">
-                            <label for="checkIn" class="form-label">Check in</label>
-                            <input type="datetime-local" class="form-control" id="checkIn" name="CheckIn" asp-for="@Model.CheckIn">
-                        </div>
-                        <div class="mb-3">
-                            <label for="checkOut" class="form-label">Check out</label>
-                            <input type="datetime-local" class="form-control" id="checkOut" name="CheckOut" asp-for="@Model.CheckOut">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </form>
-                </div>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addParkingModal">Add Parking</button>
+
+<div class="modal fade" id="addParkingModal" tabindex="-1" aria-labelledby="addParkingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addParkingModalLabel">Add Parking</h5>
+            </div>
+            <div class="modal-body">
+                <form id="addParkingForm" method="post" asp-controller="Parking" asp-action="AddParking">
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="Location" asp-for="@Model.Location">
+                    </div>
+                    <div class="mb-3">
+                        <label for="plateNumber" class="form-label">Plate Number</label>
+                        <input type="text" class="form-control" id="plateNumber" name="PlateLicense" asp-for="@Model.PlateLicense">
+                    </div>
+                    <div class="mb-3">
+                        <label for="checkIn" class="form-label">Check in</label>
+                        <input type="datetime-local" class="form-control" id="checkIn" name="CheckIn" asp-for="@Model.CheckIn">
+                    </div>
+                    <div class="mb-3">
+                        <label for="checkOut" class="form-label">Check out</label>
+                        <input type="datetime-local" class="form-control" id="checkOut" name="CheckOut" asp-for="@Model.CheckOut">
+                    </div>
+                    <div class="mb-3">
+                        <label for="checkOut" class="form-label">Parking fee</label>
+                        <input type="text" class="form-control" id="parkingFee" name="parkingFee" asp-for="@Model.ParkingFee">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </form>
             </div>
         </div>
     </div>
-}
+</div>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -55,6 +58,7 @@
             <th>Plate license</th>
             <th>Check in</th>
             <th>Check out</th>
+            <th>Parking fee</th>
         </tr>
     </thead>
     <tbody>
@@ -67,6 +71,7 @@
                 <td>@item.PlateLicense</td>
                 <td>@item.CheckIn</td>
                 <td>@item.CheckOut</td>
+                <td>@item.ParkingFee</td>
             </tr>
         }
     </tbody>

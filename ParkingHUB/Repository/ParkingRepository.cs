@@ -27,11 +27,8 @@ namespace ParkingHUB.Repository
 
         public bool CreateParking(ParkingListViewModel parking)
         {
-            var parkingEntity = new Parking
-            {
-                Location = parking.Location,
-                Price = 0.0,
-            };
+            var parkingDetails =  _context.Parkings
+                    .FirstOrDefaultAsync(p => p.Location == parking.Location);
 
             var vehicleEntity = new Vehicle
             {
@@ -39,11 +36,12 @@ namespace ParkingHUB.Repository
                 PlateLicence = parking.PlateLicense,
                 CheckIn = parking.CheckIn,
                 CheckOut = parking.CheckOut,
+                ParkingFee = parking.ParkingFee
             };
 
             var parkingVehicleEntity = new ParkingVehicle
             {
-                Parking = parkingEntity,
+                Parking = parkingDetails.Result,
                 Vehicle = vehicleEntity
             };
 
@@ -59,7 +57,8 @@ namespace ParkingHUB.Repository
                 AvailableSlot = p.AvailableSlot,
                 TotalSlot = p.TotalSlot,
                 Location = p.Location,
-                Price= p.Price
+                Price= p.Price,
+
             });
         }
 
@@ -74,7 +73,8 @@ namespace ParkingHUB.Repository
                             Location = vp.Parking.Location,
                             PlateLicense = vp.Vehicle.PlateLicence,
                             CheckIn = vp.Vehicle.CheckIn,
-                            CheckOut = vp.Vehicle.CheckOut
+                            CheckOut = vp.Vehicle.CheckOut,
+                            ParkingFee = vp.Vehicle.ParkingFee
     
                         }).ToListAsync();
 
@@ -93,7 +93,8 @@ namespace ParkingHUB.Repository
                             Location = vp.Parking.Location,
                             PlateLicense = vp.Vehicle.PlateLicence,
                             CheckIn = vp.Vehicle.CheckIn,
-                            CheckOut = vp.Vehicle.CheckOut
+                            CheckOut = vp.Vehicle.CheckOut,
+                            ParkingFee = vp.Vehicle.ParkingFee
 
                         });
 
@@ -133,7 +134,8 @@ namespace ParkingHUB.Repository
                            Location = vp.Parking.Location,
                            PlateLicense = vp.Vehicle.PlateLicence,
                            CheckIn = vp.Vehicle.CheckIn,
-                           CheckOut = vp.Vehicle.CheckOut
+                           CheckOut = vp.Vehicle.CheckOut,
+                           ParkingFee = vp.Vehicle.ParkingFee
 
                        }).ToListAsync();
             return result;

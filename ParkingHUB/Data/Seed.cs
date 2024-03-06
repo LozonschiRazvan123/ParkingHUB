@@ -47,7 +47,7 @@ namespace ParkingHUB.Data
                         new Parking
                         {
                             Price = 3.50,
-                            TotalSlot = 111,
+                            TotalSlot = 112,
                             AvailableSlot = 108,
                             Location = "Cladirea Office Park, Bulevardul Victoriei nr. 67",
                         },
@@ -81,125 +81,143 @@ namespace ParkingHUB.Data
                             PlateLicence = "IS 21 MAY",
                             CheckIn = DateTime.Parse("2024-03-01 08:00"),
                             CheckOut = DateTime.Parse("2024-03-01 10:00"),
+                            ParkingFee = 21
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "IS 20 OCT",
                             CheckIn = DateTime.Parse("2024-03-01 09:30"),
-                            CheckOut = DateTime.Parse("2024-03-01 11:30")
+                            CheckOut = DateTime.Parse("2024-03-01 11:30"),
+                            ParkingFee = 21
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "NT 19 RAZ",
                             CheckIn = DateTime.Parse("2024-03-02 17:00"),
-                            CheckOut = DateTime.Parse("2024-03-02 18:00")
+                            CheckOut = DateTime.Parse("2024-03-02 18:00"),
+                            ParkingFee = 10.5
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "BC 01 IIS",
                             CheckIn = DateTime.Parse("2024-03-01 10:15"),
-                            CheckOut = DateTime.Parse("2024-03-01 12:15")
+                            CheckOut = DateTime.Parse("2024-03-01 12:15"),
+                            ParkingFee = 21
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "NT 99 TAR",
                             CheckIn = DateTime.Parse("2024-03-01 10:15"),
-                            CheckOut = DateTime.Parse("2024-03-01 12:15")
+                            CheckOut = DateTime.Parse("2024-03-01 12:15"),
+                            ParkingFee = 14
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "VS 12 PUI",
                             CheckIn = DateTime.Parse("2024-03-01 08:00"),
-                            CheckOut = DateTime.Parse("2024-03-1 11:00")
+                            CheckOut = DateTime.Parse("2024-03-1 11:00"),
+                            ParkingFee = 14
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "GL 44 FDL",
                             CheckIn = DateTime.Parse("2024-03-01 08:00"),
-                            CheckOut = DateTime.Parse("2024-03-1 11:00")
+                            CheckOut = DateTime.Parse("2024-03-1 11:00"),
+                            ParkingFee = 21
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "BT 32 XYZ",
                             CheckIn = DateTime.Parse("2024-03-01 08:10"),
-                            CheckOut = DateTime.Parse("2024-03-1 12:10")
+                            CheckOut = DateTime.Parse("2024-03-1 12:10"),
+                            ParkingFee = 14
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "VS 22 IKJ",
                             CheckIn = DateTime.Parse("2024-03-02 17:10"),
-                            CheckOut = DateTime.Parse("2024-03-02 20:10")
+                            CheckOut = DateTime.Parse("2024-03-02 20:10"),
+                            ParkingFee = 21
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "GL 32 QWL",
                             CheckIn = DateTime.Parse("2024-03-01 08:10"),
-                            CheckOut = DateTime.Parse("2024-03-01 12:10")
+                            CheckOut = DateTime.Parse("2024-03-01 12:10"),
+                            ParkingFee = 31.5
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "NT 78 DDD",
                             CheckIn = DateTime.Parse("2024-03-02 10:10"),
-                            CheckOut = DateTime.Parse("2024-03-02 12:10")
+                            CheckOut = DateTime.Parse("2024-03-02 12:10"),
+                            ParkingFee = 7
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "BC 22 PQR",
                             CheckIn = DateTime.Parse("2024-03-02 9:23"),
-                            CheckOut = DateTime.Parse("2024-03-02 12:23")
+                            CheckOut = DateTime.Parse("2024-03-02 12:23"),
+                            ParkingFee = 10.5
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "NT 67 LIV",
                             CheckIn = DateTime.Parse("2024-03-02 10:30"),
-                            CheckOut = DateTime.Parse("2024-03-02 12:30")
+                            CheckOut = DateTime.Parse("2024-03-02 12:30"),
+                            ParkingFee = 7
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "VS 17 FCD",
                             CheckIn = DateTime.Parse("2024-03-02 17:00"),
-                            CheckOut = DateTime.Parse("2024-03-02 20:00")
+                            CheckOut = DateTime.Parse("2024-03-02 20:00"),
+                            ParkingFee = 10.5
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "NT 98 PQR",
                             CheckIn = DateTime.Parse("2024-03-02 11:00"),
-                            CheckOut = DateTime.Parse("2024-03-02 12:00")
+                            CheckOut = DateTime.Parse("2024-03-02 12:00"),
+                            ParkingFee = 80
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "IS 27 FCS",
                             CheckIn = DateTime.Parse("2024-03-01 9:23"),
-                            CheckOut = DateTime.Parse("2024-03-01 12:23")
+                            CheckOut = DateTime.Parse("2024-03-01 12:23"),
+                            ParkingFee = 240
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "IS 29 CFR",
                             CheckIn = DateTime.Parse("2024-03-01 19:00"),
-                            CheckOut = DateTime.Parse("2024-03-01 21:00")
+                            CheckOut = DateTime.Parse("2024-03-01 21:00"),
+                            ParkingFee = 100
                         },
 
                         new Vehicle
                         {
                             PlateLicence = "IS 31 PNI",
                             CheckIn = DateTime.Parse("2024-03-01 10:00"),
-                            CheckOut = DateTime.Parse("2024-03-01 21:00")
+                            CheckOut = DateTime.Parse("2024-03-01 21:00"),
+                            ParkingFee = 550
                         }
 
                     });

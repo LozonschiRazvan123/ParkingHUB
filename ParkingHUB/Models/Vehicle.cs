@@ -10,6 +10,7 @@ namespace ParkingHUB.Models
         public string PlateLicence { get; set; }
         public DateTime CheckIn { get; set; }
         public DateTime CheckOut { get; set; }
+        public double ParkingFee {  get; set; }
         public ICollection<ParkingVehicle> ParkingVehicles { get; set; }
         [ForeignKey("User")]
         public string? UserId { get; set; }

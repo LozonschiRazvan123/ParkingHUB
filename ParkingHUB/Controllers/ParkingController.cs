@@ -57,21 +57,37 @@ namespace ParkingHUB.Controllers
         {
             if (ModelState.IsValid)
             {
-                
-                if(parking.AvailableSlot > 0)
+                var parkingDetails = await _dataContext.Parkings
+                    .FirstOrDefaultAsync(p => p.Location == parking.Location);
+
+                if (parkingDetails != null && parkingDetails.AvailableSlot > 0)
                 {
-                    parking.AvailableSlot--;
-                    _dataContext.SaveChanges();
+                    parkingDetails.AvailableSlot--;
+                    if (parking.CheckIn < parking.CheckOut)
+                        parking.Price = CalculateParkingPrice(parking.CheckIn, parking.CheckOut, parkingDetails.Price);
+
+                    await _dataContext.SaveChangesAsync();
+
                     _parking.CreateParking(parking);
+
+                    return RedirectToAction("ParkingListVehicle", new { location = parking.Location });
+
                 }
-                return RedirectToAction("ParkingListVehicle", new { location = parking.Location });
             }
-            return View(parking);
+                return View(parking);
         }
 
         private int GenerateParkingId()
         {
             return _dataContext.Parkings.Max(p => p.Id) + 1; 
+        }
+
+        public double CalculateParkingPrice(DateTime checkIn, DateTime checkOut, double pricePerHour)
+        {
+            TimeSpan duration = checkOut - checkIn;
+            double hours = duration.TotalHours;
+            double totalPrice = pricePerHour * hours;
+            return totalPrice;
         }
 
     }
