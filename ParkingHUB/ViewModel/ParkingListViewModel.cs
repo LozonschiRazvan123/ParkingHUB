@@ -3,6 +3,7 @@
     public class ParkingListViewModel
     {
         public int ParkingId {  get; set; }
+        public int VehicleId {  get; set; }
         public string Location { get; set; }
         public string PlateLicense {  get; set; }
         public DateTime CheckIn {  get; set; } 

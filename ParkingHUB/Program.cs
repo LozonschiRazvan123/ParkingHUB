@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ParkingHUB.Data;
@@ -21,6 +22,7 @@ builder.Services.AddTransient<Seed>();
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddBlazoredToast();
 var app = builder.Build();
 
 if (args.Length == 1 && args[0].ToLower() == "seeddata")
@@ -47,5 +49,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();

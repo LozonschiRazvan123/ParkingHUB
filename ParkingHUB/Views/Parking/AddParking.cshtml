@@ -1,5 +1,24 @@
 ﻿@model ParkingHUB.Pagination.PageResult<ParkingHUB.ViewModel.ParkingListViewModel>
+
+@{
+
+}
+
 <h1 class="centered-title">Vehicle Parking for @ViewBag.Location</h1>
+
+@* <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        <img src="..." class="rounded mr-2" alt="...">
+        <strong class="mr-auto">Message</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+        Message.
+    </div>
+</div> *@
+
 <style>
     .pagination-container {
         display: flex;
@@ -37,12 +56,19 @@
                     <div class="mb-3">
                         <label for="checkOut" class="form-label">Check out</label>
                         <input type="datetime-local" class="form-control" id="checkOut" name="CheckOut" asp-for="@Model.CheckOut">
+                        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 0; right: 0; margin: 1rem;">
+                            <div class="toast-header">
+                                <strong class="mr-auto">Message</strong>
+                                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="toast-body">
+                                Message.
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="checkOut" class="form-label">Parking fee</label>
-                        <input type="text" class="form-control" id="parkingFee" name="parkingFee" asp-for="@Model.ParkingFee">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-primary" onclick="saveParking()">Save</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </form>
             </div>
@@ -50,6 +76,17 @@
     </div>
 </div>
 
+<div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 0; right: 0; margin: 1rem;">
+    <div class="toast-header">
+        <strong class="mr-auto">Message</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+            Message.
+    </div>
+</div>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -71,7 +108,7 @@
                 <td>@item.PlateLicense</td>
                 <td>@item.CheckIn</td>
                 <td>@item.CheckOut</td>
-                <td>@item.ParkingFee</td>
+                <td>@item.ParkingFee RON</td>
             </tr>
         }
     </tbody>
@@ -80,15 +117,57 @@
     <ul class="pagination">
         @if (Model.PreviousPage.HasValue)
         {
-            <li class="page-item"><a class="page-link" href="?pageNumber=@Model.PreviousPage">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=@Model.PreviousPage&location=@ViewBag.Location">Previous</a></li>
         }
+
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
-            <li class="page-item @(Model.CurrentPage == i ? "active" : "")"><a class="page-link" href="?pageNumber=@i">@i</a></li>
+            <li class="page-item @(Model.CurrentPage == i ? "active" : "")"><a class="page-link" href="?pageNumber=@i&location=@ViewBag.Location">@i</a></li>
         }
+
         @if (Model.NextPage.HasValue)
         {
-            <li class="page-item"><a class="page-link" href="?pageNumber=@Model.NextPage">Next</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=@Model.NextPage&location=@ViewBag.Location">Next</a></li>
         }
     </ul>
 </nav>
+<script>
+    function saveParking() {
+        var location = document.getElementById('location').value;
+        var plateLicense = document.getElementById('plateNumber').value;
+        var checkIn = document.getElementById('checkIn').value;
+        var checkOut = document.getElementById('checkOut').value;
+
+        fetch('/Parking/AddParking', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                Location: location,
+                PlateLicense: plateLicense,
+                CheckIn: checkIn,
+                CheckOut: checkOut
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+        then(data => {
+            if (data.showToast) {
+                //var myToast = new bootstrap.Toast(document.getElementById('toast'));
+                //myToast.show();
+                alert("Succesfully adding");
+            } else {
+                // Afișați un mesaj de eroare sau faceți alte acțiuni aici
+                alert('An error occurred while saving the parking!');
+            }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>

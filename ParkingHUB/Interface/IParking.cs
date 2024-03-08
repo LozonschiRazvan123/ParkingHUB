@@ -11,5 +11,6 @@ namespace ParkingHUB.Interface
         Task<IEnumerable<ParkingListViewModel>> GetParkingVehicle();
         Task<PageResult<ParkingListViewModel>> GetParkingVehicleInLocation(string location, PaginationPage filter);
         bool CreateParking(ParkingListViewModel parking);
+        bool DeleteParking(int parkingId);
     }
 }

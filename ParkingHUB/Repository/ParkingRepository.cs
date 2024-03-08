@@ -140,5 +140,16 @@ namespace ParkingHUB.Repository
                        }).ToListAsync();
             return result;
         }
+
+        public bool DeleteParking(int parkingId)
+        {
+            var parking =  _context.Vehicles.FirstOrDefault(p => p.Id == parkingId);
+            if (parking != null)
+            {
+                _context.Vehicles.Remove(parking);
+                return Save();
+            }
+            return false;
+        }
     }
 }
