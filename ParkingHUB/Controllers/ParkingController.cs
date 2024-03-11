@@ -117,5 +117,41 @@ namespace ParkingHUB.Controllers
             return totalPrice;
         }
 
+
+        public async Task<IActionResult> UpdateParking(int parkingId, IFormFile image)
+        {
+            var parking = await _parking.GetParkingsId(parkingId);
+            if (parking == null)
+            {
+                throw new Exception("Parking not found");
+            }
+
+            if (image != null && image.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await image.CopyToAsync(memoryStream);
+                    parking.Image = memoryStream.ToArray();
+
+                    bool updateSuccessful = _parking.UpdateParkingImage(parking);
+                    if (updateSuccessful)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> GetImage(int id)
+        {
+            var parking = await _parking.GetParkingsId(id);
+            if (parking == null || parking.Image == null)
+            {
+                return NotFound(); 
+            }
+
+            return File(parking.Image, "image/jpeg");
+        }
     }
 }

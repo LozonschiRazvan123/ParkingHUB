@@ -18,6 +18,7 @@
     </div>
 </section>
 
+
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -25,7 +26,7 @@
             {
                 <div class="col">
                     <div class="card shadow-sm">
-                        <img class="bd-placeholder-img card-img-top" src="@Url.Action("GetImage", "Parking", new { id = parking.Id })" width="100%" height="224" alt="No image">
+                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
                         <div class="card-body">
                             <p>Location: @parking.Location</p>
                             <p>Total parking: @parking.TotalSlot</p>
@@ -36,8 +37,8 @@
                                     <a asp-controller="Parking" asp-action="ParkingListVehicle" asp-route-location="@parking.Location" class="btn btn-sm btn-outline-secondary">View</a>
                                     <form asp-controller="Parking" asp-action="UpdateParking" method="post" enctype="multipart/form-data">
                                         <input type="hidden" name="parkingId" value="@parking.Id" />
-                                        <label for="fileInput_@parking.Id" class="btn btn-sm btn-outline-secondary">Edit photo</label>
-                                        <input type="file" id="fileInput_@parking.Id" name="image" accept="image/*" style="display: none;" onchange="this.form.submit()" />
+                                        <input type="file" name="image" accept="image/*" />
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">Edit photo</button>
                                     </form>
                                 </div>
                                 <small class="text-body-secondary">9 mins</small>

@@ -7,10 +7,13 @@ namespace ParkingHUB.Interface
     public interface IParking
     {
         Task<IEnumerable<ParkingDTO>> GetParkings();
+        Task<ParkingDTO> GetParkingsId(int id);
         Task<IEnumerable<ParkingListViewModel>> GetParkingId(int id);
         Task<IEnumerable<ParkingListViewModel>> GetParkingVehicle();
         Task<PageResult<ParkingListViewModel>> GetParkingVehicleInLocation(string location, PaginationPage filter);
         bool CreateParking(ParkingListViewModel parking);
         bool DeleteParking(int parkingId);
+        bool UpdateParkingImage(ParkingDTO parking);
+        Task<byte[]> GetImageById(int id);
     }
 }

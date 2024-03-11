@@ -58,7 +58,7 @@ namespace ParkingHUB.Repository
                 TotalSlot = p.TotalSlot,
                 Location = p.Location,
                 Price= p.Price,
-
+                Image = p.Image
             });
         }
 
@@ -150,6 +150,59 @@ namespace ParkingHUB.Repository
                 return Save();
             }
             return false;
+        }
+
+        public async Task<ParkingDTO> GetParkingsId(int id)
+        {
+            var parking = _context.Parkings.FirstOrDefault(p => p.Id == id);
+
+            if (parking == null)
+            {
+                throw new Exception($"Parking with id {id} not found.");
+            }
+
+            return new ParkingDTO
+            {
+                Id = parking.Id,
+                TotalSlot = parking.TotalSlot,
+                AvailableSlot = parking.AvailableSlot,
+                Price = parking.Price,
+                Location = parking.Location,
+                Image = parking.Image 
+            };
+        }
+
+        public bool UpdateParkingImage(ParkingDTO parking)
+        {
+            var existParking = _context.Parkings.FirstOrDefault(u => u.Id == parking.Id);
+
+            if (existParking != null)
+            {
+
+                existParking.AvailableSlot = parking.AvailableSlot;
+                existParking.Image = parking.Image;
+                existParking.Location = parking.Location;
+                existParking.Image = parking.Image;
+                existParking.Price = parking.Price;
+                existParking.Id = parking.Id;
+                _context.Update(existParking);
+                return Save();
+            }
+
+            return false;
+        }
+
+        public Task<byte[]> GetImageById(int id)
+        {
+            var parking = _context.Parkings.FirstOrDefault(img => img.Id == id);
+            if (parking != null)
+            {
+                return Task.FromResult(parking.Image); 
+            }
+            else
+            {
+                throw new Exception("Parking not found");
+            }
         }
     }
 }
