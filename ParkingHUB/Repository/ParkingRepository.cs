@@ -94,7 +94,8 @@ namespace ParkingHUB.Repository
                             PlateLicense = vp.Vehicle.PlateLicence,
                             CheckIn = vp.Vehicle.CheckIn,
                             CheckOut = vp.Vehicle.CheckOut,
-                            ParkingFee = vp.Vehicle.ParkingFee
+                            ParkingFee = vp.Vehicle.ParkingFee,
+                            TotalSlot = vp.Parking.TotalSlot,
 
                         });
 

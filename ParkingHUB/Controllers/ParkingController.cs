@@ -50,6 +50,8 @@ namespace ParkingHUB.Controllers
 
             var pageResult = await _parking.GetParkingVehicleInLocation(location, filter);
             ViewBag.Location = location;
+            var totalSlot = _dataContext.Parkings.Where(p=>p.Location==location).FirstOrDefault();
+            ViewBag.TotalSlot = totalSlot.TotalSlot;
             return View(pageResult);
         }
 

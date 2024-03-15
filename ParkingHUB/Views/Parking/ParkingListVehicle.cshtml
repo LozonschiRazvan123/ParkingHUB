@@ -1,7 +1,7 @@
 ﻿@model ParkingHUB.Pagination.PageResult<ParkingHUB.ViewModel.ParkingListViewModel>
 
 @{
-
+    var TotalSlot = Model.TotalSlot;
 }
 
 <h1 class="centered-title">Vehicle Parking for @ViewBag.Location</h1>
@@ -89,6 +89,28 @@
                 <td>@item.ParkingFee RON</td>
             </tr>
         }
+@* <div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            @for (int i = 0; i < @ViewBag.TotalSlot; i++)
+            {
+                var item = Model.Results[i]; 
+
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Location</h5>
+                            <p class="card-text">Plate License: @item.PlateLicense</p>
+                            <p class="card-text">Check In: @item.CheckIn</p>
+                            <p class="card-text">Check Out: @item.CheckOut</p>
+                            <p class="card-text">Parking Fee: @item.ParkingFee RON</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div> *@
     </tbody>
 </table>
 <nav aria-label="Page navigation" class="pagination-container">

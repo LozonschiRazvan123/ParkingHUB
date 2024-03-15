@@ -23,6 +23,10 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddBlazoredToast();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.IsEssential = true; 
+});
 var app = builder.Build();
 
 if (args.Length == 1 && args[0].ToLower() == "seeddata")
@@ -43,12 +47,16 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+    pattern: "{controller=Home}/{action=Login}/{id?}");
+app.MapControllerRoute(
+        name: "logout",
+        pattern: "Home/Logout",
+        defaults: new { controller = "Home", action = "Login" });
+app.UseSession();
 
 app.Run();
