@@ -81,7 +81,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "IS 21 MAY",
                             CheckIn = DateTime.Parse("2024-03-01 08:00"),
                             CheckOut = DateTime.Parse("2024-03-01 10:00"),
-                            ParkingFee = 21
+                            ParkingFee = 21,
                         },
 
                         new Vehicle
@@ -89,7 +89,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "IS 20 OCT",
                             CheckIn = DateTime.Parse("2024-03-01 09:30"),
                             CheckOut = DateTime.Parse("2024-03-01 11:30"),
-                            ParkingFee = 21
+                            ParkingFee = 21,
                         },
 
                         new Vehicle
@@ -97,7 +97,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "NT 19 RAZ",
                             CheckIn = DateTime.Parse("2024-03-02 17:00"),
                             CheckOut = DateTime.Parse("2024-03-02 18:00"),
-                            ParkingFee = 10.5
+                            ParkingFee = 10.5,
                         },
 
                         new Vehicle
@@ -105,7 +105,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "BC 01 IIS",
                             CheckIn = DateTime.Parse("2024-03-01 10:15"),
                             CheckOut = DateTime.Parse("2024-03-01 12:15"),
-                            ParkingFee = 21
+                            ParkingFee = 21, 
                         },
 
                         new Vehicle
@@ -113,7 +113,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "NT 99 TAR",
                             CheckIn = DateTime.Parse("2024-03-01 10:15"),
                             CheckOut = DateTime.Parse("2024-03-01 12:15"),
-                            ParkingFee = 14
+                            ParkingFee = 14,
                         },
 
                         new Vehicle
@@ -121,7 +121,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "VS 12 PUI",
                             CheckIn = DateTime.Parse("2024-03-01 08:00"),
                             CheckOut = DateTime.Parse("2024-03-1 11:00"),
-                            ParkingFee = 14
+                            ParkingFee = 14,
                         },
 
                         new Vehicle
@@ -129,7 +129,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "GL 44 FDL",
                             CheckIn = DateTime.Parse("2024-03-01 08:00"),
                             CheckOut = DateTime.Parse("2024-03-1 11:00"),
-                            ParkingFee = 21
+                            ParkingFee = 21,
                         },
 
                         new Vehicle
@@ -137,7 +137,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "BT 32 XYZ",
                             CheckIn = DateTime.Parse("2024-03-01 08:10"),
                             CheckOut = DateTime.Parse("2024-03-1 12:10"),
-                            ParkingFee = 14
+                            ParkingFee = 14,
                         },
 
                         new Vehicle
@@ -145,7 +145,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "VS 22 IKJ",
                             CheckIn = DateTime.Parse("2024-03-02 17:10"),
                             CheckOut = DateTime.Parse("2024-03-02 20:10"),
-                            ParkingFee = 21
+                            ParkingFee = 21,
                         },
 
                         new Vehicle
@@ -153,7 +153,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "GL 32 QWL",
                             CheckIn = DateTime.Parse("2024-03-01 08:10"),
                             CheckOut = DateTime.Parse("2024-03-01 12:10"),
-                            ParkingFee = 31.5
+                            ParkingFee = 31.5,
                         },
 
                         new Vehicle
@@ -161,7 +161,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "NT 78 DDD",
                             CheckIn = DateTime.Parse("2024-03-02 10:10"),
                             CheckOut = DateTime.Parse("2024-03-02 12:10"),
-                            ParkingFee = 7
+                            ParkingFee = 7,
                         },
 
                         new Vehicle
@@ -169,7 +169,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "BC 22 PQR",
                             CheckIn = DateTime.Parse("2024-03-02 9:23"),
                             CheckOut = DateTime.Parse("2024-03-02 12:23"),
-                            ParkingFee = 10.5
+                            ParkingFee = 10.5,
                         },
 
                         new Vehicle
@@ -177,7 +177,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "NT 67 LIV",
                             CheckIn = DateTime.Parse("2024-03-02 10:30"),
                             CheckOut = DateTime.Parse("2024-03-02 12:30"),
-                            ParkingFee = 7
+                            ParkingFee = 7,
                         },
 
                         new Vehicle
@@ -185,7 +185,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "VS 17 FCD",
                             CheckIn = DateTime.Parse("2024-03-02 17:00"),
                             CheckOut = DateTime.Parse("2024-03-02 20:00"),
-                            ParkingFee = 10.5
+                            ParkingFee = 10.5,
                         },
 
                         new Vehicle
@@ -193,7 +193,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "NT 98 PQR",
                             CheckIn = DateTime.Parse("2024-03-02 11:00"),
                             CheckOut = DateTime.Parse("2024-03-02 12:00"),
-                            ParkingFee = 80
+                            ParkingFee = 80,
                         },
 
                         new Vehicle
@@ -201,7 +201,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "IS 27 FCS",
                             CheckIn = DateTime.Parse("2024-03-01 9:23"),
                             CheckOut = DateTime.Parse("2024-03-01 12:23"),
-                            ParkingFee = 240
+                            ParkingFee = 240,
                         },
 
                         new Vehicle
@@ -209,7 +209,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "IS 29 CFR",
                             CheckIn = DateTime.Parse("2024-03-01 19:00"),
                             CheckOut = DateTime.Parse("2024-03-01 21:00"),
-                            ParkingFee = 100
+                            ParkingFee = 100,
                         },
 
                         new Vehicle
@@ -217,7 +217,7 @@ namespace ParkingHUB.Data
                             PlateLicence = "IS 31 PNI",
                             CheckIn = DateTime.Parse("2024-03-01 10:00"),
                             CheckOut = DateTime.Parse("2024-03-01 21:00"),
-                            ParkingFee = 550
+                            ParkingFee = 550,
                         }
 
                     });
@@ -232,24 +232,32 @@ namespace ParkingHUB.Data
                         {
                             ParkingId = 1,
                             VehicleId = 1,
+                            NumberParking = 1,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 1,
-                            VehicleId = 2,  
+                            VehicleId = 2,
+                            NumberParking = 2,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 1,
                             VehicleId = 3,
+                            NumberParking = 3,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 1,
                             VehicleId = 4,
+                            NumberParking = 5,
+                            IsOcuppied = true,
                         },
                         
 
@@ -257,84 +265,112 @@ namespace ParkingHUB.Data
                         {
                             ParkingId = 2,
                             VehicleId = 5,
+                            NumberParking = 1,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 2,
                             VehicleId = 6,
+                            NumberParking = 2,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 2,
                             VehicleId = 7,
+                            NumberParking = 7,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle 
                         { 
                             ParkingId = 2,
                             VehicleId = 8,
+                            NumberParking = 5,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 2,
                             VehicleId = 9,
+                            NumberParking = 9,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 3,
                             VehicleId = 10,
+                            NumberParking = 1,
+                            IsOcuppied = true
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 4,
                             VehicleId = 11,
+                            NumberParking = 2,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 4,
                             VehicleId = 12,
+                            NumberParking = 3,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 4,
                             VehicleId = 13,
+                            NumberParking = 13,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 4,
                             VehicleId = 14,
+                            NumberParking = 11,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 5,
                             VehicleId = 15,
+                            NumberParking = 1,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 5,
-                            VehicleId = 16
+                            VehicleId = 16,
+                            NumberParking= 2,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 6,
-                            VehicleId = 17
+                            VehicleId = 17,
+                            NumberParking= 3,
+                            IsOcuppied = true,
                         },
 
                         new ParkingVehicle
                         {
                             ParkingId = 6,
                             VehicleId = 18,
+                            NumberParking= 18,
+                            IsOcuppied = true,
                         }
                     });
                     context.SaveChanges();

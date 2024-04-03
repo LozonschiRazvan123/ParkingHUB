@@ -1,7 +1,7 @@
-﻿@* @using ParkingHUB.DTO
+﻿@using ParkingHUB.DTO
 @model ParkingDTO
 
-<form asp-controller="Parking" asp-action="UpdateParking" method="post">
+<form asp-controller="Parking" asp-action="UpdateParking" method="post" enctype="multipart/form-data">
     <input type="hidden" name="parkingId" value="@Model.Id" />
     <div class="form-group">
         <label for="location">Location:</label>
@@ -19,9 +19,10 @@
         <label for="price">Price:</label>
         <input type="number" id="price" name="price" class="form-control" value="@Model.Price" />
     </div>
-    <div class="form-group">
+    <div class="form-group mt-3">
         <label for="image">Image:</label>
-        <input type="file" id="image" name="image" accept="image/*" />
+        <input type="file" class="form-control" id="image" name="image" accept="image/*" />
     </div>
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-</form> *@
+
+    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+</form>

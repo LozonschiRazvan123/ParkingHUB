@@ -27,26 +27,32 @@ namespace ParkingHUB.Repository
 
         public bool CreateParking(ParkingListViewModel parking)
         {
-            var parkingDetails =  _context.Parkings
-                    .FirstOrDefaultAsync(p => p.Location == parking.Location);
+            var parkingDetails = _context.Parkings.FirstOrDefault(p => p.Location == parking.Location);
 
-            var vehicleEntity = new Vehicle
+            if (parkingDetails != null)
             {
-                Id = parking.ParkingId,
-                PlateLicence = parking.PlateLicense,
-                CheckIn = parking.CheckIn,
-                CheckOut = parking.CheckOut,
-                ParkingFee = parking.ParkingFee
-            };
+                var vehicleEntity = new Vehicle
+                {
+                    PlateLicence = parking.PlateLicense,
+                    CheckIn = parking.CheckIn,
+                    CheckOut = parking.CheckOut,
+                    ParkingFee = parking.ParkingFee
+                };
 
-            var parkingVehicleEntity = new ParkingVehicle
-            {
-                Parking = parkingDetails.Result,
-                Vehicle = vehicleEntity
-            };
+                var parkingVehicleEntity = new ParkingVehicle
+                {
+                    Parking = parkingDetails,
+                    Vehicle = vehicleEntity,
+                    NumberParking = parking.NumberParking,
+                    IsOcuppied = true
+                };
 
-            _context.ParkingVehicles.Add(parkingVehicleEntity);
-            return Save();
+                _context.ParkingVehicles.Add(parkingVehicleEntity);
+
+                return Save();
+            }
+
+            return false;
         }
 
         public async Task<IEnumerable<ParkingDTO>> GetParkings()
@@ -83,38 +89,47 @@ namespace ParkingHUB.Repository
 
         public async Task<PageResult<ParkingListViewModel>> GetParkingVehicleInLocation(string location, PaginationPage filter)
         {
-            var parkings =  _context.ParkingVehicles
-                        .Include(vp => vp.Vehicle)
-                        .Include(vp => vp.Parking)
-                        .Where(vp => vp.Parking.Location == location)
-                        .Select(vp => new ParkingListViewModel
-                        {
-                            ParkingId = vp.Parking.Id,
-                            Location = vp.Parking.Location,
-                            PlateLicense = vp.Vehicle.PlateLicence,
-                            CheckIn = vp.Vehicle.CheckIn,
-                            CheckOut = vp.Vehicle.CheckOut,
-                            ParkingFee = vp.Vehicle.ParkingFee,
-                            TotalSlot = vp.Parking.TotalSlot,
+            var parkingDetails = await _context.Parkings.FirstOrDefaultAsync(p => p.Location == location);
+            if (parkingDetails == null)
+            {
+                return new PageResult<ParkingListViewModel>
+                {
+                    Results = new List<ParkingListViewModel>(),
+                    TotalCount = 0,
+                    PageSize = filter.pageSize,
+                    CurrentPage = filter.pageNumber,
+                    TotalPages = 0,
+                    PreviousPage = null,
+                    NextPage = null
+                };
+            }
 
-                        });
+            var totalCount = parkingDetails.TotalSlot;
+            var totalPages = (int)Math.Ceiling(totalCount / (double)filter.pageSize);
 
-            var count = await parkings.CountAsync();
+            var startIndex = (filter.pageNumber - 1) * filter.pageSize;
+            var endIndex = Math.Min(startIndex + filter.pageSize, totalCount);
 
-            var results = await parkings
-                .OrderBy(p => p.Location)
-                .Skip((filter.pageNumber - 1) * filter.pageSize)
-                .Take(filter.pageSize)
-                .ToListAsync();
+            var parkingSlots = await _context.ParkingVehicles
+                                        .Where(pv => pv.Parking.Location == location)
+                                        .Select(pv => pv.NumberParking) 
+                                        .ToListAsync();
 
-            var totalPages = (int)System.Math.Ceiling(count / (double)filter.pageSize);
+            var totalSlotList = Enumerable.Range(startIndex, endIndex - startIndex)
+                .Select(i => new ParkingListViewModel
+                {
+                    TotalSlot = i + 1,
+                    IsOccupied = parkingSlots.Contains(i + 1) 
+                })
+                .ToList();
+
             var previousPage = filter.pageNumber > 1 ? filter.pageNumber - 1 : (int?)null;
             var nextPage = filter.pageNumber < totalPages ? filter.pageNumber + 1 : (int?)null;
 
             return new PageResult<ParkingListViewModel>
             {
-                Results = results.Cast<ParkingListViewModel>().ToList(),
-                TotalCount = count,
+                Results = totalSlotList,
+                TotalCount = totalCount,
                 PageSize = filter.pageSize,
                 CurrentPage = filter.pageNumber,
                 TotalPages = totalPages,
@@ -122,7 +137,6 @@ namespace ParkingHUB.Repository
                 NextPage = nextPage
             };
         }
-
         public async Task<IEnumerable<ParkingListViewModel>> GetParkingId(int id)
         {
             var result = await _context.ParkingVehicles
@@ -185,6 +199,7 @@ namespace ParkingHUB.Repository
                 existParking.Location = parking.Location;
                 existParking.Image = parking.Image;
                 existParking.Price = parking.Price;
+                existParking.TotalSlot = parking.TotalSlot;
                 existParking.Id = parking.Id;
                 _context.Update(existParking);
                 return Save();

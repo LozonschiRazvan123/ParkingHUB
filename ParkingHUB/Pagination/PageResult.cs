@@ -16,5 +16,7 @@
         public int? AvailableSlot { get; set; }
         public double? ParkingFee {  get; set; }
         public int? TotalSlot {  get; set; }
+        public bool? IsOcuppied { get; set; }
+        public int NumberParking { get; set; }
     }
 }

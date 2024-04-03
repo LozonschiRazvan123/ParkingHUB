@@ -34,11 +34,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <a asp-controller="Parking" asp-action="ParkingListVehicle" asp-route-location="@parking.Location" class="btn btn-sm btn-outline-secondary">View</a>
-                                    <form asp-controller="Parking" asp-action="UpdateParking" method="post" enctype="multipart/form-data">
-                                        <input type="hidden" name="parkingId" value="@parking.Id" />
-                                        <label for="fileInput_@parking.Id" class="btn btn-sm btn-outline-secondary">Edit photo</label>
-                                        <input type="file" id="fileInput_@parking.Id" name="image" accept="image/*" style="display: none;" onchange="this.form.submit()" />
-                                    </form>
+                                    <a asp-controller="Parking" asp-action="EditParking" asp-route-parkingId="@parking.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
                                 </div>
                                 <small class="text-body-secondary">9 mins</small>
                             </div>

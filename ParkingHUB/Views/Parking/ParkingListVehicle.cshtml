@@ -1,23 +1,11 @@
 ﻿@model ParkingHUB.Pagination.PageResult<ParkingHUB.ViewModel.ParkingListViewModel>
 
 @{
-    var TotalSlot = Model.TotalSlot;
+    var TotalSlot = @ViewBag.TotalSlot;
+    int totalPages = (int)Math.Ceiling((double)TotalSlot / 10);
 }
 
 <h1 class="centered-title">Vehicle Parking for @ViewBag.Location</h1>
-
-@* <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-header">
-        <img src="..." class="rounded mr-2" alt="...">
-        <strong class="mr-auto">Message</strong>
-        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="toast-body">
-        Message.
-    </div>
-</div> *@
 
 <style>
     .pagination-container {
@@ -31,8 +19,6 @@
     }
 </style>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addParkingModal">Add Parking</button>
-
 <div class="modal fade" id="addParkingModal" tabindex="-1" aria-labelledby="addParkingModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -43,7 +29,7 @@
                 <form id="addParkingForm" method="post" asp-controller="Parking" asp-action="AddParking">
                     <div class="mb-3">
                         <label for="location" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="location" name="Location" asp-for="@Model.Location">
+                        <input type="text" class="form-control" id="location" name="Location" asp-for="@Model.Location" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="plateNumber" class="form-label">Plate Number</label>
@@ -57,6 +43,10 @@
                         <label for="checkOut" class="form-label">Check out</label>
                         <input type="datetime-local" class="form-control" id="checkOut" name="CheckOut" asp-for="@Model.CheckOut">
                     </div>
+                    <div class="mb-3">
+                        <label for="selectedParkingNumber" class="form-label">Selected Parking Number</label>
+                        <input type="text" class="form-control" id="selectedParkingNumber" name="SelectedParkingNumber" readonly>
+                    </div>
                     <button type="button" class="btn btn-primary" onclick="saveParking()">Save</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </form>
@@ -65,54 +55,28 @@
     </div>
 </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Number parking</th>
-            <th>Location</th>
-            <th>Plate license</th>
-            <th>Check in</th>
-            <th>Check out</th>
-            <th>Parking fee</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int i = 0; i < Model.Results.Count; i++)
-        {
-            var item = Model.Results[i];
-            <tr>
-                <td>@(i + 1)</td>
-                <td>@item.Location</td>
-                <td>@item.PlateLicense</td>
-                <td>@item.CheckIn</td>
-                <td>@item.CheckOut</td>
-                <td>@item.ParkingFee RON</td>
-            </tr>
-        }
-@* <div class="album py-5 bg-body-tertiary">
+<div class="album py-5 bg-body-tertiary">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            @for (int i = 0; i < @ViewBag.TotalSlot; i++)
+            @foreach (var parking in Model.Results)
             {
-                var item = Model.Results[i]; 
-
                 <div class="col">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">@item.Location</h5>
-                            <p class="card-text">Plate License: @item.PlateLicense</p>
-                            <p class="card-text">Check In: @item.CheckIn</p>
-                            <p class="card-text">Check Out: @item.CheckOut</p>
-                            <p class="card-text">Parking Fee: @item.ParkingFee RON</p>
+                            <h5 class="card-title">Vehicle Parking</h5>
+                            <p class="card-text">Parking with number: @parking.TotalSlot</p>
+                            @if (!parking.IsOccupied)
+                            {
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addParkingModal" data-parking-number="@parking.NumberParking" onclick="selectParking(@parking.TotalSlot)">Add Parking</button>
+                            }
                         </div>
                     </div>
                 </div>
             }
         </div>
     </div>
-</div> *@
-    </tbody>
-</table>
+</div>
+
 <nav aria-label="Page navigation" class="pagination-container">
     <ul class="pagination">
         @if (Model.PreviousPage.HasValue)
@@ -120,9 +84,12 @@
             <li class="page-item"><a class="page-link" href="?pageNumber=@Model.PreviousPage&location=@ViewBag.Location">Previous</a></li>
         }
 
-        @for (int i = 1; i <= Model.TotalPages; i++)
+        @for (int i = 1; i <= totalPages; i++)
         {
-            <li class="page-item @(Model.CurrentPage == i ? "active" : "")"><a class="page-link" href="?pageNumber=@i&location=@ViewBag.Location">@i</a></li>
+
+            <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                <a class="page-link" href="?pageNumber=@i&location=@ViewBag.Location">@i</a>
+            </li>
         }
 
         @if (Model.NextPage.HasValue)
@@ -131,47 +98,49 @@
         }
     </ul>
 </nav>
-<<script>
-     function saveParking() {
-         var location = document.getElementById('location').value;
-         var plateLicense = document.getElementById('plateNumber').value;
-         var checkIn = document.getElementById('checkIn').value;
-         var checkOut = document.getElementById('checkOut').value;
 
-         var data = {
-             Location: location,
-             PlateLicense: plateLicense,
-             CheckIn: checkIn,
-             CheckOut: checkOut
-         };
+<script>
+    function selectParking(parkingNumber) {
+        document.getElementById("selectedParkingNumber").value = parkingNumber;
+    }
 
-         fetch('/Parking/AddParking', {
-             method: 'POST',
-             headers: {
-                 'Content-Type': 'application/json'
-             },
-             body: JSON.stringify(data)
-         })
-             .then(response => {
-                 if (!response.ok) {
-                     throw new Error('Network response was not ok');
-                 }
-                 return response.json();
-             })
-             .then(data => {
-                 if (data.showToast) {
-                     /*var myToast = new bootstrap.Toast(document.getElementById('toast'));
-                     myToast.show();
-                     var myModal = new bootstrap.Modal(document.getElementById('addParkingModal'));
-                     myModal.hide();*/
-                     alert("Add successfully");
-                 } else {
-                     // Afișați un mesaj de eroare sau faceți alte acțiuni aici
-                     alert('An error occurred while saving the parking!');
-                 }
-             })
-             .catch(error => {
-                 console.error('Error:', error);
-             });
-     }
+    function saveParking() {
+        var location = document.getElementById('location').value;
+        var plateLicense = document.getElementById('plateNumber').value;
+        var checkIn = document.getElementById('checkIn').value;
+        var checkOut = document.getElementById('checkOut').value;
+        var selectedParkingNumber = document.getElementById('selectedParkingNumber').value;
+
+        var data = {
+            Location: location,
+            PlateLicense: plateLicense,
+            CheckIn: checkIn,
+            CheckOut: checkOut,
+            NumberParking: selectedParkingNumber
+        };
+
+        fetch('/Parking/AddParking', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.showToast) {
+                    alert("Add successfully");
+                } else {
+                    alert('An error occurred while saving the parking!');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
 </script>
