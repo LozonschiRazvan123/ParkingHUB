@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ParkingHUB.Data;
+using ParkingHUB.DTO;
+using ParkingHUB.Interface;
 using ParkingHUB.Models;
 using ParkingHUB.ViewModel;
 using System.Diagnostics;
@@ -12,16 +15,19 @@ namespace ParkingHUB.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        public HomeController(UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly IEmail _emailSender;
+        public HomeController(UserManager<User> userManager, SignInManager<User> signInManager, IEmail emailSender)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
         public IActionResult Login()
         {
             var response = new LoginViewModel();
             return View(response);
         }
+
         [HttpPost]
         public async Task<IActionResult> ProcessLogin(LoginViewModel loginViewModel)
         {
@@ -37,7 +43,8 @@ namespace ParkingHUB.Controllers
                     var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Index", "Parking");
+                        var userId = user.Id;
+                        return RedirectToAction("Index", "Parking", new {userId = userId});
                     }
                 }
                 TempData["Error"] = "Wrong credentials. Please try again";
@@ -81,12 +88,83 @@ namespace ParkingHUB.Controllers
             if (newUserResponse.Succeeded)
             {
                 await _userManager.AddToRoleAsync(newUser, UserRoles.User);
-                await _signInManager.SignInAsync(newUser, isPersistent: false); 
-                return RedirectToAction("Index", "Parking");
+                await _signInManager.SignInAsync(newUser, isPersistent: false);
+                var userId = user.Id;
+                return RedirectToAction("Index", "Parking", new { userId = userId });
             }
 
             return View(registerViewModel);
         }
 
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.EmailAddress);
+                if (user != null)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var callbackUrl = Url.Action("ResetPassword", "Home", new { userId = user.Id, token = token }, protocol: HttpContext.Request.Scheme); 
+                    var emailDto = new EmailDTO
+                    {
+                        From = "parkinhub@hub.ro",
+                        To = model.EmailAddress,
+                        Subject = "Reset Password",
+                        Body = $"Please reset your password by clicking <a href='{callbackUrl}'>here</a>."
+                    };
+
+                    _emailSender.SendEmail(emailDto);
+
+                    return Ok();
+                }
+            }
+
+            return BadRequest();
+        }
+
+
+        [HttpGet] 
+        public IActionResult ResetPassword(string token)
+        {
+            var model = new ResetPassword { Token = token };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(string userId, string token, ResetPassword model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            if (model.Password != model.ConfirmPassword)
+            {
+                TempData["Error"] = "The password and confirmation password do not match.";
+                return View("ResetPassword", model);
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                TempData["Error"] = "User not found.";
+                return View("ResetPassword", model);;
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, token, model.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                TempData["Error"] = "An error occurred while resetting the password.";
+                return View("ResetPassword", model); ;
+            }
+        }
     }
 }

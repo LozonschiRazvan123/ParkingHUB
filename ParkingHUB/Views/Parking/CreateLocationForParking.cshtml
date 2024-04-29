@@ -1,0 +1,34 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@using ParkingHUB.DTO
+@model ParkingDTO
+
+<h1 class="centered-title">Add Parking</h1>
+<form asp-controller="Parking" asp-action="CreateLocationForParking" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="Location" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="totalSlot">Total parking:</label>
+        <input type="number" id="totalSlot" name="TotalSlot" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="availableSlot">Free parking:</label>
+        <input type="number" id="availableSlot" name="AvailableSlot" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="Price" class="form-control" />
+    </div>
+    <div class="form-group mt-3">
+        <label for="image">Image:</label>
+        <input type="file" class="form-control" id="image" name="Image" accept="image/*" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Add Parking</button>
+</form>
+

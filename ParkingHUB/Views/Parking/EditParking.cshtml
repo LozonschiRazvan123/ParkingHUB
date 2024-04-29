@@ -1,6 +1,7 @@
 ﻿@using ParkingHUB.DTO
 @model ParkingDTO
 
+<h1 class="centered-title">Update parking for @ViewBag.Location</h1>
 <form asp-controller="Parking" asp-action="UpdateParking" method="post" enctype="multipart/form-data">
     <input type="hidden" name="parkingId" value="@Model.Id" />
     <div class="form-group">

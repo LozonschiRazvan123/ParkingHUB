@@ -1,11 +1,13 @@
 using Blazored.Toast;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using ParkingHUB.Data;
 using ParkingHUB.Interface;
 using ParkingHUB.Models;
 using ParkingHUB.Repository;
 using ParkingHUB.ViewModel;
+using PdfSharp.Charting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,13 +17,19 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IParking, ParkingRepository>();
+builder.Services.AddScoped<IEmail, EmailService>();
 builder.Services.AddScoped<IPagination<ParkingListViewModel>, PaginationRepository<ParkingListViewModel>>();
 builder.Services.AddScoped(typeof(PaginationRepository<>));
 builder.Services.AddTransient<Seed>();
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+{
+    options.TokenLifespan = TimeSpan.FromHours(1);
+});
 builder.Services.AddBlazoredToast();
 builder.Services.AddSession(options =>
 {
@@ -42,7 +50,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -57,6 +64,13 @@ app.MapControllerRoute(
         name: "logout",
         pattern: "Home/Logout",
         defaults: new { controller = "Home", action = "Login" });
+
+app.MapControllerRoute(
+    name: "resetpassword",
+    pattern: "Home/ResetPassword/{token?}", 
+    defaults: new { controller = "Home", action = "ResetPassword" });
+
+
 app.UseSession();
 
 app.Run();

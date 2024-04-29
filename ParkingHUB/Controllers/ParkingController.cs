@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ParkingHUB.Data;
 using ParkingHUB.DTO;
 using ParkingHUB.Interface;
@@ -7,6 +9,7 @@ using ParkingHUB.Models;
 using ParkingHUB.Pagination;
 using ParkingHUB.Repository;
 using ParkingHUB.ViewModel;
+using System.Security.Claims;
 
 namespace ParkingHUB.Controllers
 {
@@ -15,11 +18,15 @@ namespace ParkingHUB.Controllers
         private readonly IParking _parking;
         private readonly IPagination<ParkingListViewModel> _paginationRepository;
         private readonly DataContext _dataContext;
-        public ParkingController(IParking parking, IPagination<ParkingListViewModel> paginationRepository, DataContext dataContext)
+        private readonly IHttpContextAccessor _httpContext;
+        private readonly DataContext _context;
+        public ParkingController(IParking parking, IPagination<ParkingListViewModel> paginationRepository, DataContext dataContext, IHttpContextAccessor httpContext, DataContext context)
         {
             _parking = parking;
             _paginationRepository = paginationRepository;
             _dataContext = dataContext;
+            _httpContext = httpContext;
+            _context = context;
         }
 
         public async Task<IActionResult> Index()
@@ -67,6 +74,8 @@ namespace ParkingHUB.Controllers
                 pageSize = pageSize
             };
 
+            var userId = _httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (ModelState.IsValid)
             {
                 var parkingDetails = await _dataContext.Parkings.FirstOrDefaultAsync(p => p.Location == parking.Location);
@@ -81,13 +90,12 @@ namespace ParkingHUB.Controllers
                         _dataContext.Parkings.Update(parkingDetails);
                         await _dataContext.SaveChangesAsync();
 
-                        if (_parking.CreateParking(parking))
+                        if (_parking.CreateParking(parking, userId))
                         {
                             return Json(new { showToast = true });
                         }
                         else
                         {
-                            // În cazul în care nu putem crea parcare, ar trebui să ne asigurăm că slotul disponibil este restabilit
                             parkingDetails.AvailableSlot++;
                             _dataContext.Parkings.Update(parkingDetails);
                             await _dataContext.SaveChangesAsync();
@@ -106,8 +114,6 @@ namespace ParkingHUB.Controllers
 
             return Json(new { showToast = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
         }
-
-
 
         private int GenerateParkingId()
         {
@@ -131,6 +137,7 @@ namespace ParkingHUB.Controllers
                 throw new Exception("Parking not found");
             }
 
+            ViewBag.Location = model.Location;
             parking.Location = model.Location;
             parking.TotalSlot = model.TotalSlot;
             parking.AvailableSlot = model.AvailableSlot;
@@ -163,6 +170,8 @@ namespace ParkingHUB.Controllers
                 return NotFound();
             }
 
+            ViewBag.Location = parking.Location;
+
             return View(parking);
         }
 
@@ -174,7 +183,94 @@ namespace ParkingHUB.Controllers
                 return NotFound();
             }
 
+
             return File(parking.Image, "image/jpeg");
+        }
+
+        public async Task<IActionResult> CreateLocationForParking(ParkingDTO parking, IFormFile image)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(parking);
+            }
+
+            if (image != null && image.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await image.CopyToAsync(memoryStream);
+                    parking.Image = memoryStream.ToArray();
+                }
+            }
+
+            if (_parking.CreateLocationForParking(parking))
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Failed to create parking location.");
+                return View(parking);
+            }
+        }
+
+        public async Task<IActionResult> DeleteParking(int id)
+        {
+            var success = _parking.DeleteParking(id);
+            if (!success)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
+        public async Task<IActionResult> ExtendParkingVehicleTime()
+        {
+            var userId = _httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            using (StreamReader reader = new StreamReader(Request.Body))
+            {
+                string requestBody = await reader.ReadToEndAsync();
+                var requestData = JsonConvert.DeserializeObject<JObject>(requestBody);
+
+                int vehicleId = requestData.Value<int>("vehicleId");
+                DateTime newEndTime = requestData.Value<DateTime>("newEndTime");
+
+                var vehicle = await _context.Vehicles.FirstOrDefaultAsync(v => v.Id == vehicleId && v.UserId == userId);
+                if (vehicle != null)
+                {
+                    bool parkingExtended = await _parking.ExtendParkingTime(vehicleId, newEndTime);
+                    if (parkingExtended)
+                    {
+                        return Json(new { showToast = true });
+                    }
+                    else
+                    {
+                        return Json(new { showToast = false });
+                    }
+                }
+                else
+                {
+                    return Json(new { showToast = false });
+                }
+            }
+        }
+
+        public async Task<IActionResult> Search(DateTime checkIn, DateTime checkOut, int pageNumber = 1, int pageSize = 10)
+        {
+            var pageResult = await _parking.Search(checkIn, checkOut, pageNumber, pageSize);
+            return View("ParkingList", pageResult);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DownloadPdf(DateTime checkIn, DateTime checkOut)
+        {
+            var pdfBytes = await _parking.GenereateVehicleParkingPDF(checkIn, checkOut);
+
+            return File(pdfBytes, "application/pdf", "vehicle_parking_report.pdf");
         }
     }
 }

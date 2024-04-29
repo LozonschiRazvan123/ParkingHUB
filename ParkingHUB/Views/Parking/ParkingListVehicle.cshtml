@@ -69,6 +69,12 @@
                             {
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addParkingModal" data-parking-number="@parking.NumberParking" onclick="selectParking(@parking.TotalSlot)">Add Parking</button>
                             }
+                            else
+                            {
+                                <p class="card-text">Plate Number: @parking.PlateLicense</p>
+                                <p class="card-text">Amount Paid: @parking.Price RON</p>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#extendParkingModal" data-vehicle-id="@parking.VehicleId" onclick="populateExtendModal(@parking.VehicleId)">Extend Parking</button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -77,6 +83,28 @@
     </div>
 </div>
 
+<div class="modal fade" id="extendParkingModal" tabindex="-1" aria-labelledby="extendParkingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="extendParkingModalLabel">Extend Parking</h5>
+            </div>
+            <div class="modal-body">
+                <form id="extendParkingForm" method="post" asp-controller="Parking" asp-action="ExtendParkingVehicleTime">
+                    <div class="mb-3">
+                        <label for="newEndTime" class="form-label">New End Time</label>
+                        <input type="datetime-local" class="form-control" id="newEndTime" name="NewEndTime" value="@Model.CheckOut">
+                    </div>
+                    <div class="mb-3">
+                        <input type="hidden" id="extendedParkingNumber" name="extendedParkingNumber">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="extendParking()">Extend</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <nav aria-label="Page navigation" class="pagination-container">
     <ul class="pagination">
         @if (Model.PreviousPage.HasValue)
@@ -102,6 +130,9 @@
 <script>
     function selectParking(parkingNumber) {
         document.getElementById("selectedParkingNumber").value = parkingNumber;
+    }
+    function populateExtendModal(vehicleId) {
+        document.getElementById("extendedParkingNumber").value = vehicleId;
     }
 
     function saveParking() {
@@ -141,6 +172,41 @@
             })
             .catch(error => {
                 console.error('Error:', error);
+            });
+    }
+
+    function extendParking() {
+        var newEndTime = document.getElementById('newEndTime').value;
+        var extendedParkingNumber = document.getElementById('extendedParkingNumber').value;
+
+        var data = {
+            vehicleId: extendedParkingNumber,
+            newEndTime: newEndTime
+        };
+        console.log(data)
+        fetch('/Parking/ExtendParkingVehicleTime', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }) 
+            .then(data => {
+                if (data.showToast) {
+                    alert("Parking time extended successfully");
+                } else {
+                    alert('An error occurred while extending parking time');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request.');
             });
     }
 </script>

@@ -1,11 +1,10 @@
 ﻿@using ParkingHUB.ViewModel
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+@model ParkingHUB.Pagination.PageResult<ParkingHUB.ViewModel.ParkingListViewModel>
 @{
+    ViewData["CheckIn"] = Model.CheckIn;
+    ViewData["CheckOut"] = Model.CheckOut;
 }
 <h1 class="centered-title">Vehicle Parking List</h1>
-@model ParkingHUB.Pagination.PageResult<ParkingHUB.ViewModel.ParkingListViewModel>
 <style>
     .pagination-container {
         display: flex;
@@ -17,6 +16,22 @@
         margin-bottom: 1em;
     }
 </style>
+
+<form id="searchForm" method="post" action="/Parking/Search">
+    <div class="mb-3 text-center">
+        <label for="checkIn" class="form-label">Check in</label>
+        <input type="datetime-local" class="form-control d-inline" id="checkIn" name="checkIn" style="width: 200px;" value="@ViewData["CheckIn"]">
+    </div>
+    <div class="mb-3 text-center">
+        <label for="checkOut" class="form-label">Check out</label>
+        <input type="datetime-local" class="form-control d-inline" id="checkOut" name="checkOut" style="width: 200px;" value="@ViewData["CheckOut"]">
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary mx-2">Search</button>
+        <button id="downloadBtn" class="btn btn-success mx-2">Download Report</button>
+    </div>
+</form>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -47,15 +62,24 @@
     <ul class="pagination">
         @if (Model.PreviousPage.HasValue)
         {
-            <li class="page-item"><a class="page-link" href="?pageNumber=@Model.PreviousPage">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=@Model.PreviousPage&checkIn=@Model.CheckIn&checkOut=@Model.CheckOut">Previous</a></li>
         }
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
-            <li class="page-item @(Model.CurrentPage == i ? "active" : "")"><a class="page-link" href="?pageNumber=@i">@i</a></li>
+            <li class="page-item @(Model.CurrentPage == i ? "active" : "")"><a class="page-link" href="?pageNumber=@i&checkIn=@Model.CheckIn&checkOut=@Model.CheckOut">@i</a></li>
         }
         @if (Model.NextPage.HasValue)
         {
-            <li class="page-item"><a class="page-link" href="?pageNumber=@Model.NextPage">Next</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=@Model.NextPage&checkIn=@Model.CheckIn&checkOut=@Model.CheckOut">Next</a></li>
         }
     </ul>
 </nav>
+<script>
+    document.getElementById("downloadBtn").addEventListener("click", function () {
+        var checkIn = document.getElementById("checkIn").value;
+        var checkOut = document.getElementById("checkOut").value;
+
+        var form = document.getElementById("searchForm");
+        form.action = `/Parking/DownloadPdf?checkIn=${checkIn}&checkOut=${checkOut}`;
+    });
+</script>
