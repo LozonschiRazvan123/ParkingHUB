@@ -34,12 +34,20 @@
             {
                 <div class="col">
                     <div class="card shadow-sm">
-                        <img class="bd-placeholder-img card-img-top" src="@Url.Action("GetImage", "Parking", new { id = parking.Id })" width="100%" height="224" alt="No image">
+                        @if (@parking.Image != null)
+                        {
+                            <img class="bd-placeholder-img card-img-top" src="@Url.Action("GetImage", "Parking", new { id = parking.Id })
+                            " width="100%" height="224">
+                        }
+                        else
+                        {
+                            <img src="~/img/no-photo-available.png" />
+                        }
                         <div class="card-body">
                             <p>Location: @parking.Location</p>
                             <p>Total parking: @parking.TotalSlot</p>
                             <p>Free parking: @parking.AvailableSlot</p>
-                            <p>Price: @parking.Price</p>
+                            <p>Price: @parking.Price RON</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <a asp-controller="Parking" asp-action="ParkingListVehicle" asp-route-location="@parking.Location" class="btn btn-sm btn-outline-secondary">View</a>

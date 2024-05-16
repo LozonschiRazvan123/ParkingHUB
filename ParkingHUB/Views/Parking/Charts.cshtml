@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Charts.js Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+    <div class="text-center">
+        <h1 class="display-4">Parking Occupancy</h1>
+        <p>Occupied parking spaces by location and date</p>
+        <canvas id="parkingChart" width="800" height="400"></canvas>
+    </div>
+
+    <script>
+        async function getParkingDataAndDrawChart() {
+            try {
+                const response = await fetch('/Parking/GetParkingChartsData');
+                const textResponse = await response.text();
+                console.log('Response text:', textResponse);
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const parkingData = JSON.parse(textResponse);
+                    drawChart(parkingData);
+                } else {
+                    throw new Error('Response is not JSON');
+                }
+            } catch (error) {
+                console.error('Error fetching parking data:', error.message);
+            }
+        }
+
+        function drawChart(parkingData) {
+            const ctx = document.getElementById('parkingChart').getContext('2d');
+            const groupedData = parkingData.reduce((acc, item) => {
+                if (!acc[item.location]) {
+                    acc[item.location] = [];
+                }
+                acc[item.location].push({
+                    date: new Date(item.date),
+                    occupiedCount: item.occupiedCount
+                });
+                return acc;
+            }, {});
+
+            const datasets = Object.keys(groupedData).map(location => ({
+                label: location,
+                data: groupedData[location].map(data => ({
+                    x: data.date,
+                    y: data.occupiedCount
+                })),
+                fill: false,
+                borderColor: getRandomColor(),
+                tension: 0.1
+            }));
+
+            const config = {
+                type: 'line',
+                data: {
+                    datasets: datasets
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            };
+            new Chart(ctx, config);
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            getParkingDataAndDrawChart();
+        });
+    </script>
+</body>
+</html>

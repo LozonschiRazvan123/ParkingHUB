@@ -18,5 +18,7 @@
         public int? TotalSlot {  get; set; }
         public bool? IsOcuppied { get; set; }
         public int NumberParking { get; set; }
+        public int CardNumber {  get; set; }
+        public int CVV {  get; set; }
     }
 }

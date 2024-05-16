@@ -15,5 +15,7 @@ namespace ParkingHUB.Models
         [ForeignKey("User")]
         public string? UserId { get; set; }
         public User? User { get; set; }
+        public int NumberCard {  get; set; }
+        public int CVV {  get; set; }
     }
 }

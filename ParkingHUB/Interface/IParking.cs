@@ -13,11 +13,13 @@ namespace ParkingHUB.Interface
         Task<PageResult<ParkingListViewModel>> GetParkingVehicleInLocation(string location, PaginationPage filter);
         Task<PageResult<ParkingListViewModel>> Search(DateTime checkIn, DateTime checkOut, int pageNumber = 1, int pageSize = 10);
         Task<bool> ExtendParkingTime(int vehicleId, DateTime newEndTime);
+        Task<bool> ProcessCheckout(ParkingListViewModel checkoutData);
         bool CreateParking(ParkingListViewModel parking, string userId);
         bool DeleteParking(int parkingId);
         bool UpdateParkingImage(ParkingDTO parking);
         bool CreateLocationForParking(ParkingDTO parking);
         Task<byte[]> GetImageById(int id);
         Task<byte[]> GenereateVehicleParkingPDF(DateTime checkIn, DateTime checkOut);
+        Task<List<ParkingChartDataModel>> GetParkingDataForChart();
     }
 }

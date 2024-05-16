@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]  ParkingHUB</title>
+    <title>@ViewData["Title"] ParkingHUB</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ParkingHUB.styles.css" asp-append-version="true" />
@@ -19,50 +19,48 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            @if (User.Identity.IsAuthenticated)
-                            {
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Parking" asp-action="Index">Parking</a>
-                            }
-                            else
+                            </li>
+                            @if (User.IsInRole("admin"))
                             {
-                                <a class="nav-link text-dark disabled" aria-disabled="true">Parking</a>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Parking" asp-action="ParkingList">Report parking</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Parking" asp-action="Charts">Chart</a>
+                                </li>
                             }
-                        </li>
-                        <li class="nav-item">
-                            @if (User.Identity.IsAuthenticated)
-                            {
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Parking" asp-action="ParkingList">Vehicle parking</a>
-                            }
-                            else
-                            {
-                                <a class="nav-link text-dark disabled" aria-disabled="true">Vehicle parking</a>
-                            }
-                        </li>
-                        <li class="nav-item">
-                            @if (User.Identity.IsAuthenticated)
-                            {
+                            @* <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            }
-                            else
-                            {
-                                <a class="nav-link text-dark disabled" aria-disabled="true">Home</a>
-                            }
-                        </li>
-                        <li class="nav-item">
-                            @if (User.Identity.IsAuthenticated)
-                            {
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            }
-                            else
-                            {
+                            </li> *@
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark disabled" aria-disabled="true">Parking</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark disabled" aria-disabled="true">Vehicle parking</a>
+                            </li>
+@*                             <li class="nav-item">
+                                <a class="nav-link text-dark disabled" aria-disabled="true">Home</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark disabled" aria-disabled="true">Privacy</a>
-                            }
-                        </li>
+                            </li> *@
+                            <li class="nav-item">
+                                <a class="nav-link text-dark disabled" aria-disabled="true">Chart</a>
+                            </li>
+                        }
                     </ul>
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                        </ul>
+                        <ul class="navbar-nav flex-grow-1"></ul>
                         <div class="navbar-nav flex-grow-1 d-flex justify-content-end">
                             @if (User.Identity.IsAuthenticated)
                             {
@@ -78,14 +76,11 @@
                             else
                             {
                                 <div class="nav-item">
-                                    <a class="nav-link text-dark disabled" aria-disabled="true">Login</a>
+                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
                                 </div>
                             }
                         </div>
                     </div>
-                </div>
-                        
-                    </ul>
                 </div>
             </div>
         </nav>
@@ -98,22 +93,13 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - ParkingHUB - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - ParkingHUB
+            @* - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @* <script>
-        window.onblur = function () {
-            fetch('/Home/Logout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            });
-        }
-    </script>  *@
-@*     @await RenderSectionAsync("Scripts", required: false) *@
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -17,6 +17,14 @@
         text-align: center;
         margin-bottom: 1em;
     }
+
+    .occupied {
+        border: 2px solid red; 
+    }
+
+    .available {
+        border: 2px solid green;
+    }
 </style>
 
 <div class="modal fade" id="addParkingModal" tabindex="-1" aria-labelledby="addParkingModalLabel" aria-hidden="true">
@@ -37,11 +45,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="checkIn" class="form-label">Check in</label>
-                        <input type="datetime-local" class="form-control" id="checkIn" name="CheckIn" asp-for="@Model.CheckIn">
-                    </div>
-                    <div class="mb-3">
-                        <label for="checkOut" class="form-label">Check out</label>
-                        <input type="datetime-local" class="form-control" id="checkOut" name="CheckOut" asp-for="@Model.CheckOut">
+                        <input type="datetime-local" class="form-control" id="checkIn" name="CheckIn" asp-for="@Model.CheckIn" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="selectedParkingNumber" class="form-label">Selected Parking Number</label>
@@ -61,7 +65,7 @@
             @foreach (var parking in Model.Results)
             {
                 <div class="col">
-                    <div class="card shadow-sm">
+                    <div class="card shadow-sm @((parking.IsOccupied) ? "occupied" : "available")">
                         <div class="card-body">
                             <h5 class="card-title">Vehicle Parking</h5>
                             <p class="card-text">Parking with number: @parking.TotalSlot</p>
@@ -72,13 +76,42 @@
                             else
                             {
                                 <p class="card-text">Plate Number: @parking.PlateLicense</p>
-                                <p class="card-text">Amount Paid: @parking.Price RON</p>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#extendParkingModal" data-vehicle-id="@parking.VehicleId" onclick="populateExtendModal(@parking.VehicleId)">Extend Parking</button>
+                                @* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#extendParkingModal" data-vehicle-id="@parking.VehicleId" onclick="populateExtendModal(@parking.VehicleId)">Extend Parking</button> *@
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkOutModal" onclick="checkoutParking('@parking.VehicleId')">Check Out</button>
                             }
                         </div>
                     </div>
                 </div>
             }
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="checkOutModal" tabindex="-1" aria-labelledby="checkOutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="checkOutModalLabel">Check Out</h5>
+            </div>
+            <div class="modal-body">
+                <p>Current Check Out Time: @DateTime.Now.ToString("yyyy-MM-dd HH:mm")</p>
+                <form id="checkOutForm">
+                    <input type="datetime-local" class="form-control" id="checkOut" name="CheckOut" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" readonly>
+                    <div class="row">
+                        <div class="col">
+                            <label for="cardnumber" class="form-label">Card number</label>
+                            <input type="text" class="form-control" id="cardNumber" name="CardNumber">
+                        </div>
+                        <div class="col">
+                            <label for="cvv" class="form-label">CVV</label>
+                            <input type="text" class="form-control" id="cvv" name="CVV">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmCheckOut">Confirm Check Out</button>
+            </div>
         </div>
     </div>
 </div>
@@ -135,7 +168,8 @@
         document.getElementById("extendedParkingNumber").value = vehicleId;
     }
 
-    function saveParking() {
+    function saveParking() 
+    {
         var location = document.getElementById('location').value;
         var plateLicense = document.getElementById('plateNumber').value;
         var checkIn = document.getElementById('checkIn').value;
@@ -175,7 +209,8 @@
             });
     }
 
-    function extendParking() {
+    function extendParking()
+    {
         var newEndTime = document.getElementById('newEndTime').value;
         var extendedParkingNumber = document.getElementById('extendedParkingNumber').value;
 
@@ -209,4 +244,44 @@
                 alert('An error occurred while processing your request.');
             });
     }
+
+    function checkoutParking(vehicleId) 
+    {
+        document.getElementById("confirmCheckOut").addEventListener("click", function () {
+        var cardNumber = document.getElementById("cardNumber").value;
+        var cvv = document.getElementById("cvv").value;
+        var checkOut = document.getElementById("checkOut").value;
+
+        var data = {
+            cardNumber: cardNumber,
+            cvv: cvv,
+            checkOut: checkOut,
+            vehicleId: vehicleId,
+        };
+
+        fetch('/Parking/ProcessCheckout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.showToast) {
+                        alert("Parking checkout completed successfully");
+                } else {
+                    alert('An error occurred while processing checkout.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+}
 </script>

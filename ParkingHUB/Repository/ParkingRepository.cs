@@ -16,6 +16,7 @@ using System.Drawing;
 using System.Security.Claims;
 using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ParkingHUB.Repository
 {
@@ -49,8 +50,6 @@ namespace ParkingHUB.Repository
                 {
                     PlateLicence = parking.PlateLicense,
                     CheckIn = parking.CheckIn,
-                    CheckOut = parking.CheckOut,
-                    ParkingFee = parking.ParkingFee,
                     UserId = userId
                 };
 
@@ -172,7 +171,7 @@ namespace ParkingHUB.Repository
             TimeSpan duration = checkOut - checkIn;
             double hours = duration.TotalHours;
             double totalPrice = pricePerHour * hours;
-            return totalPrice;
+            return Math.Round(totalPrice, 2);
         }
         public async Task<IEnumerable<ParkingListViewModel>> GetParkingId(int id)
         {
@@ -397,6 +396,47 @@ namespace ParkingHUB.Repository
                 return stream.ToArray();
             }
         }
+
+        public async Task<bool> ProcessCheckout(ParkingListViewModel checkoutData)
+        {
+            var vehicle = await _context.Vehicles.FirstOrDefaultAsync(v => v.Id == checkoutData.VehicleId);
+            if (vehicle == null)
+            {
+                return false;
+            }
+
+            vehicle.NumberCard = checkoutData.CardNumber;
+            vehicle.CVV = checkoutData.CVV;
+            vehicle.CheckOut = checkoutData.CheckOut;
+
+            var totalPrice = CalculateParkingPrice(checkoutData.CheckIn, checkoutData.CheckOut, checkoutData.Price);
+            vehicle.ParkingFee = totalPrice;
+
+            _context.Vehicles.Update(vehicle);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<List<ParkingChartDataModel>> GetParkingDataForChart()
+        {
+            var parkingData = await _context.ParkingVehicles
+                .Include(pv => pv.Parking)
+                .Where(pv => pv.Parking != null)
+                .GroupBy(pv => new { pv.Parking.Location, pv.Vehicle.CheckIn.Date })
+                .OrderBy(g => g.Key.Location)
+                .ThenBy(g => g.Key.Date)
+                .Select(g => new ParkingChartDataModel
+                {
+                    Location = g.Key.Location,
+                    Date = g.Key.Date,
+                    OccupiedCount = g.Count()
+                })
+                .ToListAsync();
+
+            return parkingData;
+        }
+
 
     }
 }

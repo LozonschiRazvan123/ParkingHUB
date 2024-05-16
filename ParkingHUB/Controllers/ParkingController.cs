@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -20,13 +21,15 @@ namespace ParkingHUB.Controllers
         private readonly DataContext _dataContext;
         private readonly IHttpContextAccessor _httpContext;
         private readonly DataContext _context;
-        public ParkingController(IParking parking, IPagination<ParkingListViewModel> paginationRepository, DataContext dataContext, IHttpContextAccessor httpContext, DataContext context)
+        private readonly UserManager<User> _userManager;
+        public ParkingController(IParking parking, IPagination<ParkingListViewModel> paginationRepository, DataContext dataContext, IHttpContextAccessor httpContext, DataContext context, UserManager<User> userManager)
         {
             _parking = parking;
             _paginationRepository = paginationRepository;
             _dataContext = dataContext;
             _httpContext = httpContext;
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -82,34 +85,30 @@ namespace ParkingHUB.Controllers
 
                 if (parkingDetails != null && parkingDetails.AvailableSlot > 0)
                 {
-                    if (parking.CheckIn < parking.CheckOut && (parking.CheckOut - parking.CheckIn).TotalHours % 1 == 0)
+                    parkingDetails.AvailableSlot--;
+
+                    _dataContext.Parkings.Update(parkingDetails);
+                    await _dataContext.SaveChangesAsync();
+
+                    if (_parking.CreateParking(parking, userId))
                     {
-                        parkingDetails.AvailableSlot--;
-                        parking.ParkingFee = CalculateParkingPrice(parking.CheckIn, parking.CheckOut, parkingDetails.Price);
-
-                        _dataContext.Parkings.Update(parkingDetails);
-                        await _dataContext.SaveChangesAsync();
-
-                        if (_parking.CreateParking(parking, userId))
-                        {
-                            return Json(new { showToast = true });
-                        }
-                        else
-                        {
-                            parkingDetails.AvailableSlot++;
-                            _dataContext.Parkings.Update(parkingDetails);
-                            await _dataContext.SaveChangesAsync();
-                        }
+                        return Json(new { showToast = true });
                     }
                     else
                     {
-                        ModelState.AddModelError("", "The difference between CheckIn and CheckOut should be an integer number of hours.");
+                        parkingDetails.AvailableSlot++;
+                        _dataContext.Parkings.Update(parkingDetails);
+                        await _dataContext.SaveChangesAsync();
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "No available parking slots.");
+                    ModelState.AddModelError("", "The difference between CheckIn and CheckOut should be an integer number of hours.");
                 }
+            }
+            else
+            {
+                ModelState.AddModelError("", "No available parking slots.");
             }
 
             return Json(new { showToast = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
@@ -272,5 +271,76 @@ namespace ParkingHUB.Controllers
 
             return File(pdfBytes, "application/pdf", "vehicle_parking_report.pdf");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ProcessCheckout([FromBody] ParkingListViewModel checkoutData)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userId = _userManager.GetUserId(User);
+
+            var vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == checkoutData.VehicleId && v.UserId == userId);
+            if (vehicle == null)
+            {
+                return Json(new { showToast = false });
+            }
+
+            var checkIn = vehicle.CheckIn;
+
+            checkoutData.CheckIn = checkIn;
+
+            var vehicleParking = _context.ParkingVehicles
+                .Include(vp => vp.Parking)
+                .Include(vp => vp.Vehicle)
+                .FirstOrDefault(vp => vp.VehicleId == vehicle.Id);
+
+            checkoutData.Price = vehicleParking.Parking.Price;
+            vehicleParking.IsOcuppied = false;
+
+            var parking = _context.Parkings.FirstOrDefault(p => p.Id == vehicleParking.ParkingId);
+            if (parking != null)
+            {
+                parking.AvailableSlot++; 
+            }
+
+            
+
+            var result = await _parking.ProcessCheckout(checkoutData);
+            
+            //await _context.SaveChangesAsync();
+
+            if (result)
+            {
+                return Json(new { showToast = true });
+            }
+            else
+            {
+                return Json(new { showToast = false });
+            }
+            
+            
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetParkingChartsData()
+        {
+            var parkingData = await _parking.GetParkingDataForChart();
+            if (parkingData != null && parkingData.Any())
+            {
+                return Json(parkingData);
+            }
+            return NotFound("No parking data available.");
+        }
+
+        [HttpGet]
+        public IActionResult Charts()
+        {
+            return View();
+        }
+
+
     }
 }

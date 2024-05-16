@@ -67,33 +67,43 @@ namespace ParkingHUB.Controllers
             return View(response);
         }
 
+        [HttpPost]
         public async Task<IActionResult> ProcessRegister(RegisterViewModel registerViewModel)
         {
-            if (!ModelState.IsValid) return View(registerViewModel);
-
-            var user = await _userManager.FindByEmailAsync(registerViewModel.EmailAddress);
-            if (user != null)
+            if (!ModelState.IsValid)
             {
-                TempData["Error"] = "This email address is already in use";
-                return View(registerViewModel);
+                return View("Register", registerViewModel); 
             }
 
-            var newUser = new User()
+            var userExists = await _userManager.FindByEmailAsync(registerViewModel.EmailAddress);
+            if (userExists != null)
+            {
+                TempData["Error"] = "The user already exist!";
+                return View("Register", registerViewModel);
+            }
+            var newUser = new User
             {
                 Email = registerViewModel.EmailAddress,
                 UserName = registerViewModel.UserName
             };
-            var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
 
-            if (newUserResponse.Succeeded)
+            var result = await _userManager.CreateAsync(newUser, registerViewModel.Password);
+            if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(newUser, UserRoles.User);
-                await _signInManager.SignInAsync(newUser, isPersistent: false);
-                var userId = user.Id;
-                return RedirectToAction("Index", "Parking", new { userId = userId });
-            }
 
-            return View(registerViewModel);
+                await _signInManager.SignInAsync(newUser, isPersistent: false);
+
+                return RedirectToAction("Index", "Parking");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View("Register", registerViewModel);
+            }
         }
 
         public IActionResult ForgotPassword()
