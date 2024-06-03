@@ -338,10 +338,10 @@ namespace ParkingHUB.Repository
 
             XGraphics gfx = XGraphics.FromPdfPage(page);
 
-            if (Capabilities.Build.IsCoreBuild)
+            /*if (Capabilities.Build.IsCoreBuild)
             {
                 GlobalFontSettings.FontResolver = new FailsafeFontResolver();
-            }
+            }*/
             var font = new XFont("Arial", 10, XFontStyleEx.Bold);
 
             double[] columnWidths = { 50, 150, 150, 150, 150, 150 };

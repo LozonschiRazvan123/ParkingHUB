@@ -9,6 +9,8 @@ using ParkingHUB.Repository;
 using ParkingHUB.ViewModel;
 using PdfSharp.Charting;
 using Newtonsoft.Json.Serialization;
+using PdfSharp.Fonts;
+using PdfSharp.Snippets.Font;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +41,9 @@ builder.Services.AddSession(options =>
 {
     options.Cookie.IsEssential = true; 
 });
+
+GlobalFontSettings.FontResolver = new FailsafeFontResolver();
+
 var app = builder.Build();
 
 if (args.Length == 1 && args[0].ToLower() == "seeddata")

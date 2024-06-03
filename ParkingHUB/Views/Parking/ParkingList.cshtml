@@ -28,7 +28,7 @@
     </div>
     <div class="text-center">
         <button type="submit" class="btn btn-primary mx-2">Search</button>
-        <button id="downloadBtn" class="btn btn-success mx-2">Download Report</button>
+        <button type="button" id="downloadBtn" class="btn btn-success mx-2">Download Report</button>
     </div>
 </form>
 
@@ -79,7 +79,16 @@
         var checkIn = document.getElementById("checkIn").value;
         var checkOut = document.getElementById("checkOut").value;
 
-        var form = document.getElementById("searchForm");
-        form.action = `/Parking/DownloadPdf?checkIn=${checkIn}&checkOut=${checkOut}`;
+        fetch(`/Parking/DownloadPdf?checkIn=${checkIn}&checkOut=${checkOut}`, {
+            method: 'POST'
+        })
+            .then(response => response.blob())
+            .then(blob => {
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "vehicle_parking_report.pdf";
+                link.click();
+            })
+            .catch(error => console.error('Error downloading PDF:', error));
     });
 </script>
