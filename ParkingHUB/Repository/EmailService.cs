@@ -13,13 +13,13 @@ namespace ParkingHUB.Repository
         {
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(request.From));
-            email.To.Add(MailboxAddress.Parse("alden.lakin@ethereal.email"));
+            email.To.Add(MailboxAddress.Parse("obie40@ethereal.email"));
             email.Subject = request.Subject;
             email.Body = new TextPart(TextFormat.Html) { Text = request.Body };
 
             using var smtp = new SmtpClient();
             smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate("alden.lakin@ethereal.email", "KHRuhH6bxpQYEyhkGY");
+            smtp.Authenticate("obie40@ethereal.email", "pDjeFQEGqTgmF24Dya");
             smtp.Send(email);
             smtp.Disconnect(true);
         }

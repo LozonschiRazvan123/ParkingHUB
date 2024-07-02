@@ -123,8 +123,12 @@ namespace ParkingHUB.Controllers
         {
             TimeSpan duration = checkOut - checkIn;
             double hours = duration.TotalHours;
-            double totalPrice = pricePerHour * hours;
-            return totalPrice;
+            if (hours < 1) return 10;
+            else
+            {
+                double totalPrice = pricePerHour * hours;
+                return totalPrice;
+            }
         }
 
 
@@ -306,9 +310,9 @@ namespace ParkingHUB.Controllers
                 parking.AvailableSlot++; 
             }
 
-            
 
-            var result = await _parking.ProcessCheckout(checkoutData);
+
+            /*var result = await _parking.ProcessCheckout(checkoutData);
             
             //await _context.SaveChangesAsync();
 
@@ -319,9 +323,20 @@ namespace ParkingHUB.Controllers
             else
             {
                 return Json(new { showToast = false });
+            }*/
+
+            var result = await _parking.ProcessCheckout(checkoutData);
+
+            if (result)
+            {
+                var totalPrice = CalculateParkingPrice(checkIn, checkoutData.CheckOut, checkoutData.Price);
+                return Json(new { showToast = true, price = totalPrice });
             }
-            
-            
+            else
+            {
+                return Json(new { showToast = false });
+            }
+
         }
 
         [HttpGet]

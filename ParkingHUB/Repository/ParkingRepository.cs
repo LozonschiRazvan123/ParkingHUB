@@ -168,9 +168,11 @@ namespace ParkingHUB.Repository
 
         public double CalculateParkingPrice(DateTime checkIn, DateTime checkOut, double pricePerHour)
         {
+            double totalPrice;
             TimeSpan duration = checkOut - checkIn;
             double hours = duration.TotalHours;
-            double totalPrice = pricePerHour * hours;
+            if (hours < 1) totalPrice = 10;
+             else totalPrice = pricePerHour * hours;
             return Math.Round(totalPrice, 2);
         }
         public async Task<IEnumerable<ParkingListViewModel>> GetParkingId(int id)
